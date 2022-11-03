@@ -1,6 +1,5 @@
 package cmpt362.group14.gostudent.db
 
-
 import com.google.firebase.firestore.DocumentId
 
 data class User(
