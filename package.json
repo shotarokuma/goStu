@@ -4,7 +4,7 @@
   "author": "cmpt362",
   "husky": {
     "hooks": {
-      "pre-commit": "./gradlew ktlintFormat"
+      "pre-commit": "./gradlew ktlint && ./gradlew ktlintFormat"
     }
   },
   "devDependencies": {
