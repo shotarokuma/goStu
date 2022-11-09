@@ -43,6 +43,4 @@ class HomeChat : AppCompatActivity() {
         menuInflater.inflate(R.menu.message_menu,menu)
         return super.onCreateOptionsMenu(menu)
     }
-
-
 }
