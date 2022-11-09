@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         emailEditText = findViewById(R.id.editTextEmailAddress)
         passwordEditText = findViewById(R.id.editTextPassword)
         registerButton = findViewById(R.id.loginButton)
-        loginTextView = findViewById(R.id.goBackTextView)
+        loginTextView = findViewById(R.id.loginTextView)
         auth = FirebaseAuth.getInstance()
 
         registerButton.setOnClickListener {
@@ -68,9 +68,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun updateUI(user: FirebaseUser?) {
-        //Updates UI after account is created
+        Log.d(TAG, "update UI")
     }
-
 }
