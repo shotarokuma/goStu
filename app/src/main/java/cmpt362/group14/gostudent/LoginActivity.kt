@@ -1,12 +1,12 @@
 package cmpt362.group14.gostudent
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
             signIn(email, password)
         }
-        goBackTextView.setOnClickListener{
+        goBackTextView.setOnClickListener {
             this.finish()
         }
     }
@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-    fun updateUI(user: FirebaseUser?){
+    fun updateUI(user: FirebaseUser?) {
         Log.d(TAG, "update UI")
     }
 }
