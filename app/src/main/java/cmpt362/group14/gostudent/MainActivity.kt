@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import cmpt362.group14.gostudent.model.User
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
@@ -19,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var registerButton: Button
     private lateinit var loginTextView: TextView
     private lateinit var auth: FirebaseAuth
+    private lateinit var newUser: User
+    private lateinit var db: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,11 +33,13 @@ class MainActivity : AppCompatActivity() {
         registerButton = findViewById(R.id.loginButton)
         loginTextView = findViewById(R.id.loginTextView)
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         registerButton.setOnClickListener {
-            val email = emailEditText.text.toString()
-            val password = passwordEditText.text.toString()
-            createAccount(email, password)
+            val name: String = userNameEditText.text.toString()
+            val email: String = emailEditText.text.toString()
+            val password: String = passwordEditText.text.toString()
+            createAccount(name, email, password)
         }
         loginTextView.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
@@ -41,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun createAccount(email: String, password: String) {
+    private fun createAccount(name: String, email: String, password: String) {
 
         if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
             Toast.makeText(
@@ -56,9 +62,7 @@ class MainActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 // update UI with account details
                 Log.d(TAG, "CreateUser success, uid: ${task.result.user!!.uid}")
-                Toast.makeText(this, "Create Account Successful", Toast.LENGTH_SHORT).show()
-                val user = auth.currentUser
-                updateUI(user)
+                storeAccount(task.result.user!!.uid,name, email, password)
             } else {
                 // tell user that authentication failed, update UI
                 Log.w(TAG, "CreateUser fail", task.exception)
@@ -67,6 +71,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun storeAccount(uid: String, name: String, email: String, password:String){
+        newUser = User(uid, name, email, password)
+        db.collection("user")
+            .document()
+            .set(newUser)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Create Account Successful", Toast.LENGTH_SHORT).show()
+                val user: FirebaseUser? = auth.currentUser
+                updateUI(user)
+            }
+    }
+
 
     private fun updateUI(user: FirebaseUser?) {
         Log.d(TAG, "update UI")
