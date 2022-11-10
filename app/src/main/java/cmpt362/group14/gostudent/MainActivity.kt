@@ -35,15 +35,15 @@ class MainActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
             createAccount(email, password)
         }
-        loginTextView.setOnClickListener{
+        loginTextView.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
     }
 
-    private fun createAccount(email : String, password : String){
+    private fun createAccount(email: String, password: String) {
 
-        if(email.isNullOrEmpty() || password.isNullOrEmpty()){
+        if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
             Toast.makeText(
                 this,
                 "Please enter an email or password",
@@ -52,15 +52,15 @@ class MainActivity : AppCompatActivity() {
             return
         }
         val result = auth.createUserWithEmailAndPassword(email, password)
-        result.addOnCompleteListener {  task ->
-            if(task.isSuccessful){
-                //update UI with account details
+        result.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // update UI with account details
                 Log.d(TAG, "CreateUser success, uid: ${task.result.user!!.uid}")
                 Toast.makeText(this, "Create Account Successful", Toast.LENGTH_SHORT).show()
                 val user = auth.currentUser
                 updateUI(user)
-            } else{
-                //tell user that authentication failed, update UI
+            } else {
+                // tell user that authentication failed, update UI
                 Log.w(TAG, "CreateUser fail", task.exception)
                 Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
                 updateUI(null)
