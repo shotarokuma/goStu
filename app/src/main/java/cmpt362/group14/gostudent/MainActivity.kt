@@ -8,10 +8,10 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import cmpt362.group14.gostudent.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import cmpt362.group14.gostudent.model.User
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 // update UI with account details
                 Log.d(TAG, "CreateUser success, uid: ${task.result.user!!.uid}")
-                storeAccount(task.result.user!!.uid,name, email, password)
+                storeAccount(task.result.user!!.uid, name, email, password)
             } else {
                 // tell user that authentication failed, update UI
                 Log.w(TAG, "CreateUser fail", task.exception)
@@ -72,8 +72,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun storeAccount(uid: String, name: String, email: String, password:String){
-        newUser = User(uid, name, email, password)
+    private fun storeAccount(uid: String, name: String, email: String, password: String) {
+        newUser = User(uid= uid, name = name, mail = email , password = password)
         db.collection("user")
             .document()
             .set(newUser)
@@ -83,7 +83,6 @@ class MainActivity : AppCompatActivity() {
                 updateUI(user)
             }
     }
-
 
     private fun updateUI(user: FirebaseUser?) {
         Log.d(TAG, "update UI")
