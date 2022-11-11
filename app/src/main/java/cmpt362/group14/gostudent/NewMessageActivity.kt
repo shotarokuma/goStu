@@ -54,7 +54,7 @@ class NewMessageActivity : AppCompatActivity() {
                 adapter.setOnItemClickListener{ item,view ->
                     val userItem = item as UserItem
                     var intent = Intent(view.context,ChatActivity::class.java)
-//                    intent.putExtra(USER_KEY,userItem.user)
+ //                   intent.putExtra(USER_KEY,userItem.user)
                     startActivity(intent)
                 }
 
