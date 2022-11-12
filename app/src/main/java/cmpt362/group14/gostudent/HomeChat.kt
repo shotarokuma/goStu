@@ -6,10 +6,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import cmpt362.group14.gostudent.view.LatestMessagesRow
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -18,6 +22,7 @@ class HomeChat : AppCompatActivity() {
 
     companion object{
         var currentUser: User? = null
+        val TAG = "LatestMessages"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +30,18 @@ class HomeChat : AppCompatActivity() {
 
         var latest_recyclerView = findViewById<RecyclerView>(R.id.latest_message_recyclerView)
         latest_recyclerView.adapter = adapter
+        latest_recyclerView.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.VERTICAL))
+
+        adapter.setOnItemClickListener { item, view ->
+            Log.d(TAG, "123")
+            val intent = Intent(this, ChatActivity::class.java)
+
+
+            val row = item as LatestMessagesRow
+
+            intent.putExtra(NewMessageActivity.USER_KEY, row.chatPartnerUser)
+            startActivity(intent)
+        }
 
         listenLatestMessages()
 
@@ -39,17 +56,7 @@ class HomeChat : AppCompatActivity() {
         }
 
     }
-    class LatestMessagesRow(val chatMessage: ChatMessage):Item<ViewHolder>(){
-        override fun bind(viewHolder: ViewHolder, position: Int) {
-            var textViewMessage = viewHolder.itemView.findViewById<TextView>(R.id.latest_message_textview)
-            textViewMessage.text = chatMessage.text
-        }
 
-        override fun getLayout(): Int {
-            return R.layout.latest_message_row
-        }
-
-    }
 
     private fun refreshRecyclerViewmessages() {
         adapter.clear()
