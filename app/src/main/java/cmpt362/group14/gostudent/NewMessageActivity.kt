@@ -24,11 +24,7 @@ class NewMessageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_message)
         newMessage_recycleView = findViewById(R.id.newMessage_recycleView)
-//        val adapter = GroupAdapter<ViewHolder>()
-//        adapter.add(UserItem())
-//        adapter.add(UserItem())
-//        adapter.add(UserItem())
-//        newMessage_recycleView.adapter = adapter
+
 
         fetchUsers()
     }

@@ -37,10 +37,7 @@ class ChatActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerview_chat)
         var recyclerView = findViewById<RecyclerView>(R.id.recyclerview_chat)
         recyclerView.adapter = adapter
-//        val adapter = GroupAdapter<ViewHolder>()
 
-//        adapter.add(ChatFromItem("message from"))
-//        adapter.add(ChatToItem("message to"))
 
         listenForMessages()
 
@@ -102,7 +99,7 @@ class ChatActivity : AppCompatActivity() {
         val user = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
         var toId = user?.uid
 
-//        val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
+
         val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
         val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
 
