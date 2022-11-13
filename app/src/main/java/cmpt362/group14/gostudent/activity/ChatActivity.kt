@@ -1,4 +1,4 @@
-package cmpt362.group14.gostudent
+package cmpt362.group14.gostudent.activity
 
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.ChatMessage
 import cmpt362.group14.gostudent.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -58,16 +59,16 @@ class ChatActivity : AppCompatActivity() {
             .whereEqualTo("toId", toId)
             .addSnapshotListener { value, error ->
                 if (error != null) {
-                    Log.w(HomeChat.TAG, "Listen failed.", error)
+                    Log.w(HomeChatActivity.TAG, "Listen failed.", error)
                     return@addSnapshotListener
                 }
 
                 for (dc in value!!.documentChanges) {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
-                            val chatMessage: ChatMessage = value.documents[0] as ChatMessage
-                            if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
-                                val currentUser: User? = HomeChat.currentUser
+                            val chatMessage: ChatMessage? = value.documents[0].toObject(ChatMessage::class.java)
+                            if (chatMessage!!.fromId == FirebaseAuth.getInstance().uid) {
+                                val currentUser: User? = HomeChatActivity.currentUser
                                 adapter.add(ChatFromItem(chatMessage.text, currentUser!!))
                             } else {
                                 adapter.add(ChatToItem(chatMessage.text, toUser))
@@ -84,12 +85,13 @@ class ChatActivity : AppCompatActivity() {
         val chat = editTextChat.text.toString()
 
         fromId = FirebaseAuth.getInstance().uid
-        user = intent.getSerializableExtra(NewMessageActivity.USER_KEY) as User
+        val toUserData: String? = intent.getStringExtra(NewMessageActivity.USER_KEY)
+        user = Gson().fromJson(toUserData!!, User::class.java)
         toId = user.uid
         val chatMessage: ChatMessage = ChatMessage(text = chat, fromId = fromId!!, toId = toId!!)
         db.collection("user-message")
             .document()
-            .set(chat)
+            .set(chatMessage)
             .addOnSuccessListener {
                 editTextChat.text.clear()
                 recyclerView.scrollToPosition(adapter.itemCount - 1)
@@ -97,7 +99,7 @@ class ChatActivity : AppCompatActivity() {
 
         db.collection("latest-message")
             .document()
-            .set(chat)
+            .set(chatMessage)
     }
 
     class ChatFromItem(var text: String, val user: User) : Item<ViewHolder>() {
@@ -105,7 +107,7 @@ class ChatActivity : AppCompatActivity() {
             val textView: TextView = viewHolder.itemView.findViewById(R.id.textView_from)
             textView.text = text
 
-            TODO("profile image")
+//            TODO("profile image")
 //        val uri = user.profileImageUrl
 //        val targetImageView = viewHolder.itemView.findViewById<ImageView>(R.id.imageView_from_row)
         }
@@ -123,8 +125,8 @@ class ChatActivity : AppCompatActivity() {
         override fun bind(viewHolder: ViewHolder, position: Int) {
             val textView: TextView = viewHolder.itemView.findViewById(R.id.textView_to)
             textView.text = text
-
-            TODO("profile image")
+//
+//            TODO("profile image")
 //        val uri = user.profileImageUrl
 //        val targetImageView = viewHolder.itemView.findViewById<ImageView>(R.id.imageView_from_row)
 //        Picasso.get().load(uri).into(targetImageView)

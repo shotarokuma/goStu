@@ -1,12 +1,14 @@
-package cmpt362.group14.gostudent
+package cmpt362.group14.gostudent.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import cmpt362.group14.gostudent.R
+import cmpt362.group14.gostudent.model.User
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
@@ -40,7 +42,7 @@ class NewMessageActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         val adapter: GroupAdapter<ViewHolder> = GroupAdapter<ViewHolder>()
                         it.result.documents.forEach { d ->
-                            val user: User? = d as User?
+                            val user: User? = d.toObject(User::class.java)
                             if (user != null) {
                                 adapter.add(UserItem(user))
                             }
@@ -60,8 +62,10 @@ class NewMessageActivity : AppCompatActivity() {
 
 class UserItem(val user: User) : Item<ViewHolder>() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
-//        var textView = viewHolder.itemView.findViewById<TextView>(R.id.textView_new_message)
-//        textView.text = user.username
+        val textView: TextView = viewHolder.itemView.findViewById<TextView>(R.id.textView_new_message)
+        textView.text = user.name
+
+//        TODO("Profile")
 //        var imageview = viewHolder.itemView.findViewById<TextView>(R.id.imageView_new_message)
 //        Picasso.get().load(user.profileImageUrl).into(imageview)
     }

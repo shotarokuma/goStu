@@ -32,15 +32,15 @@ class LatestMessagesRow(private val chatMessage: ChatMessage) : Item<ViewHolder>
             .addOnCompleteListener(
                 OnCompleteListener {
                     if (it.isCanceled) {
-                        TODO("Not yet implemented")
+//                        TODO("Not yet implemented")
                     }
 
                     if (it.isSuccessful) {
-                        chatPartnerUser = it.result.documents[0] as User
-//                        var textV = viewHolder.itemView.findViewById<TextView>(R.id.).text
+                        chatPartnerUser = it.result.documents[0].toObject(User::class.java)
+//                        var textV = viewHolder.itemView.findViewById<TextView>(R.id.)
 //                        textV = chatPartnerUser?.name
 
-                        TODO("Profile")
+//                        TODO("Profile")
 //                    val targetIV = viewHolder.itemView.findViewById<ImageView>(R.id.imageView_latest_message)
 //                    Picasso.get().load(chatPartnerUser?.profileImageUrl).into(targetIV)
                     }

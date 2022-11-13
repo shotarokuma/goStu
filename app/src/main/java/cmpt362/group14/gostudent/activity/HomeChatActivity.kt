@@ -1,4 +1,4 @@
-package cmpt362.group14.gostudent
+package cmpt362.group14.gostudent.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.ChatMessage
 import cmpt362.group14.gostudent.model.User
 import cmpt362.group14.gostudent.view.LatestMessagesRow
@@ -18,7 +19,7 @@ import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 
-class HomeChat : AppCompatActivity() {
+class HomeChatActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var uid: String
     private lateinit var latestView: RecyclerView
@@ -54,7 +55,7 @@ class HomeChat : AppCompatActivity() {
 
         val uid = FirebaseAuth.getInstance().uid
         if (uid == null) {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, SignUpActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
@@ -96,7 +97,7 @@ class HomeChat : AppCompatActivity() {
         db.collection("user")
             .whereEqualTo("uid", uid)
             .get()
-            .addOnSuccessListener { it ->
+            .addOnSuccessListener {
                 currentUser = it.documents[0].toObject(User::class.java)
                 Log.d("HomeChat", "Current user ${currentUser?.name}")
             }
@@ -113,7 +114,7 @@ class HomeChat : AppCompatActivity() {
             }
             R.id.sign_out -> {
                 FirebaseAuth.getInstance().signOut()
-                intent = Intent(this, MainActivity::class.java)
+                intent = Intent(this, SignUpActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }

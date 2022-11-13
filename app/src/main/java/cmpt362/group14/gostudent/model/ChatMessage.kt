@@ -6,8 +6,8 @@ import java.util.Date
 data class ChatMessage(
     @DocumentId
     val mid: String = "",
-    val text: String,
-    val fromId: String,
-    val toId: String,
+    val text: String = "",
+    val fromId: String = "",
+    val toId: String = "",
     val createdTime: Date = Date()
 )
