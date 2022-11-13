@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         userNameEditText = findViewById(R.id.editTextUserName)
         emailEditText = findViewById(R.id.editTextEmailAddress)
         passwordEditText = findViewById(R.id.editTextPassword)
@@ -75,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun storeAccount(uid: String, name: String, email: String, password: String) {
-        newUser = User(uid= uid, name = name, mail = email , password = password)
+        newUser = User(uid = uid, name = name, mail = email, password = password)
         db.collection("user")
             .document()
             .set(newUser)
@@ -88,6 +87,5 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUI(user: FirebaseUser?) {
         Log.d(TAG, "update UI")
-
     }
 }
