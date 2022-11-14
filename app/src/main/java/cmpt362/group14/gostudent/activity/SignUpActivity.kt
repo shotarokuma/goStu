@@ -1,12 +1,12 @@
 package cmpt362.group14.gostudent.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.User
@@ -15,12 +15,14 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUpActivity : AppCompatActivity() {
+    private lateinit var galleryResult: ActivityResultLauncher<Intent>
     private val TAG = "SignUpActivity"
     private lateinit var emailEditText: EditText
     private lateinit var userNameEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var registerButton: Button
     private lateinit var loginTextView: TextView
+    private lateinit var profileImageButton: ImageButton
     private lateinit var auth: FirebaseAuth
     private lateinit var newUser: User
     private lateinit var db: FirebaseFirestore
@@ -34,8 +36,20 @@ class SignUpActivity : AppCompatActivity() {
         passwordEditText = findViewById(R.id.editTextPassword)
         registerButton = findViewById(R.id.loginButton)
         loginTextView = findViewById(R.id.loginTextView)
+        profileImageButton = findViewById(R.id.profileImageButton)
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+
+
+        galleryResult = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "Image Selected")
+                val galleryImgUri = it.data?.data!!
+                profileImageButton.setImageURI(galleryImgUri)
+            }
+        }
 
         registerButton.setOnClickListener {
             val name: String = userNameEditText.text.toString()
@@ -46,6 +60,14 @@ class SignUpActivity : AppCompatActivity() {
         loginTextView.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+
+        }
+        profileImageButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+
+            galleryResult.launch(intent)
+
         }
     }
 
