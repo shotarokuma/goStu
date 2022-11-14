@@ -1,4 +1,4 @@
-package cmpt362.group14.gostudent
+package cmpt362.group14.gostudent.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,13 +8,14 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MainActivity : AppCompatActivity() {
-    private val TAG = "MainActivity"
+class SignUpActivity : AppCompatActivity() {
+    private val TAG = "SignUpActivity"
     private lateinit var emailEditText: EditText
     private lateinit var userNameEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var newUser: User
     private lateinit var db: FirebaseFirestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -73,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun storeAccount(uid: String, name: String, email: String, password: String) {
-        newUser = User(uid= uid, name = name, mail = email , password = password)
+        newUser = User(uid = uid, name = name, mail = email, password = password)
         db.collection("user")
             .document()
             .set(newUser)

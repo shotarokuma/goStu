@@ -13,11 +13,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GoStudent"
         tools:targetApi="31">
+
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.ChatActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.NewMessageActivity" />
+        </activity>
+        <activity
+            android:name=".activity.NewMessageActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.HomeChatActivity" />
+        </activity>
+        <activity
+            android:name=".activity.HomeChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SignUpActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
