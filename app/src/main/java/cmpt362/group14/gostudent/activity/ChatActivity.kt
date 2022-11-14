@@ -35,7 +35,7 @@ class ChatActivity : AppCompatActivity() {
 
         val userData: String? = intent.getStringExtra(NewMessageActivity.USER_KEY)
         toUser = Gson().fromJson(userData!!, User::class.java)
-        supportActionBar?.title = toUser.uid
+        supportActionBar?.title = toUser.name
 
         db = FirebaseFirestore.getInstance()
 
