@@ -5,7 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +37,7 @@ class SignUpActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_sign_up)
 
         userNameEditText = findViewById(R.id.editTextUserName)
         emailEditText = findViewById(R.id.editTextEmailAddress)
@@ -43,7 +47,6 @@ class SignUpActivity : AppCompatActivity() {
         profileImageButton = findViewById(R.id.profileImageButton)
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
-
 
         galleryResult = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -64,14 +67,12 @@ class SignUpActivity : AppCompatActivity() {
         loginTextView.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
-
         }
         profileImageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
 
             galleryResult.launch(intent)
-
         }
     }
 
@@ -108,14 +109,14 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
     private fun storeAccount(uid: String, name: String, email: String, password: String) {
-        //store image in firebase storage
+        // store image in firebase storage
         val fname = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("/images/$fname")
 
         val putFile = ref.putFile(galleryImgUri!!)
         putFile.addOnSuccessListener {
             Log.d(TAG, "storeImage: success")
-            //download url, then make new user
+            // download url, then make new user
             ref.downloadUrl.addOnSuccessListener {
                 newUser = User(
                     uid = uid,
@@ -137,7 +138,6 @@ class SignUpActivity : AppCompatActivity() {
         putFile.addOnFailureListener {
             Toast.makeText(this, "Store Image Failed", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun updateUI(user: FirebaseUser?) {

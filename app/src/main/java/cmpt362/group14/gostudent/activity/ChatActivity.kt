@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -55,8 +57,8 @@ class ChatActivity : AppCompatActivity() {
         fromId = FirebaseAuth.getInstance().uid
         toId = toUser.uid
         db.collection("user-message")
-            .whereEqualTo("fromId", fromId)
-            .whereEqualTo("toId", toId)
+            .whereIn("fromId", listOf(fromId, toId))
+            .orderBy("createdTime")
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.w(HomeChatActivity.TAG, "Listen failed.", error)
@@ -66,13 +68,12 @@ class ChatActivity : AppCompatActivity() {
                 for (dc in value!!.documentChanges) {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
-                            //val chatMessage: ChatMessage? = value.documents[0].toObject(ChatMessage::class.java)
-                            val chatMessage: ChatMessage? =
+                            val chatMessage: ChatMessage =
                                 dc.document.toObject(ChatMessage::class.java)
-                            if (chatMessage!!.fromId == FirebaseAuth.getInstance().uid) {
+                            if (chatMessage.fromId == FirebaseAuth.getInstance().uid && chatMessage.toId == toUser.uid) {
                                 val currentUser: User? = HomeChatActivity.currentUser
                                 adapter.add(ChatFromItem(chatMessage.text, currentUser!!))
-                            } else {
+                            } else if (chatMessage.toId == FirebaseAuth.getInstance().uid) {
                                 adapter.add(ChatToItem(chatMessage.text, toUser))
                             }
                         }
@@ -102,16 +103,17 @@ class ChatActivity : AppCompatActivity() {
         db.collection("latest-message")
             .document()
             .set(chatMessage)
+        adapter.clear()
+        listenForMessages()
     }
 
-    class ChatFromItem(var text: String, val user: User) : Item<ViewHolder>() {
+    class ChatFromItem(val text: String, val user: User) : Item<ViewHolder>() {
         override fun bind(viewHolder: ViewHolder, position: Int) {
             val textView: TextView = viewHolder.itemView.findViewById(R.id.textView_from)
             textView.text = text
 
-//            TODO("profile image")
-//        val uri = user.profileImageUrl
-//        val targetImageView = viewHolder.itemView.findViewById<ImageView>(R.id.imageView_from_row)
+            val targetImageView: ImageView = viewHolder.itemView.findViewById(R.id.imageView_from_row)
+            Picasso.get().load(user.profileImageUrl).into(targetImageView)
         }
 
         override fun getLayout(): Int {
@@ -128,10 +130,8 @@ class ChatActivity : AppCompatActivity() {
             val textView: TextView = viewHolder.itemView.findViewById(R.id.textView_to)
             textView.text = text
 
-//            TODO("profile image")
-//        val uri = user.profileImageUrl
-//        val targetImageView = viewHolder.itemView.findViewById<ImageView>(R.id.imageView_from_row)
-//        Picasso.get().load(uri).into(targetImageView)
+            val targetImageView: ImageView = viewHolder.itemView.findViewById(R.id.imageView_to_row)
+            Picasso.get().load(user.profileImageUrl).into(targetImageView)
         }
     }
 }
