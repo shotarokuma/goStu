@@ -1,5 +1,6 @@
 package cmpt362.group14.gostudent.view
 
+import android.widget.ImageView
 import android.widget.TextView
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.ChatMessage
@@ -7,6 +8,7 @@ import cmpt362.group14.gostudent.model.User
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 
@@ -37,12 +39,11 @@ class LatestMessagesRow(private val chatMessage: ChatMessage) : Item<ViewHolder>
 
                     if (it.isSuccessful) {
                         chatPartnerUser = it.result.documents[0].toObject(User::class.java)
-//                        var textV = viewHolder.itemView.findViewById<TextView>(R.id.)
-//                        textV = chatPartnerUser?.name
+                        val textV = viewHolder.itemView.findViewById<TextView>(R.id.latest_message_username_textview)
+                        textV.text = chatPartnerUser?.name
 
-//                        TODO("Profile")
-//                    val targetIV = viewHolder.itemView.findViewById<ImageView>(R.id.imageView_latest_message)
-//                    Picasso.get().load(chatPartnerUser?.profileImageUrl).into(targetIV)
+                        val targetIV: ImageView = viewHolder.itemView.findViewById(R.id.imageView_latest_message)
+                        Picasso.get().load(chatPartnerUser?.profileImageUrl).into(targetIV)
                     }
                 }
             )

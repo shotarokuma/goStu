@@ -7,7 +7,7 @@
     <string name="email">Email</string>
     <string name="username">Username</string>
     <string name="register">Register</string>
-    <string name="log_in_text_view">Already Have an activity? Press here to log in.</string>
+    <string name="log_in_text_view">Already Have an account? Press here to log in.</string>
     <string name="login">login</string>
     <string name="go_back">Press here to go back</string>
 </resources>
