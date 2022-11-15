@@ -35,7 +35,7 @@ class ChatActivity : AppCompatActivity() {
 
         val userData: String? = intent.getStringExtra(NewMessageActivity.USER_KEY)
         toUser = Gson().fromJson(userData!!, User::class.java)
-        supportActionBar?.title = toUser.uid
+        supportActionBar?.title = toUser.name
 
         db = FirebaseFirestore.getInstance()
 
@@ -127,7 +127,7 @@ class ChatActivity : AppCompatActivity() {
         override fun bind(viewHolder: ViewHolder, position: Int) {
             val textView: TextView = viewHolder.itemView.findViewById(R.id.textView_to)
             textView.text = text
-//
+
 //            TODO("profile image")
 //        val uri = user.profileImageUrl
 //        val targetImageView = viewHolder.itemView.findViewById<ImageView>(R.id.imageView_from_row)
