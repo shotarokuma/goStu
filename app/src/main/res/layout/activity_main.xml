@@ -66,4 +66,18 @@
         app:layout_constraintEnd_toEndOf="@+id/editTextUserName"
         app:layout_constraintStart_toStartOf="@+id/editTextUserName"
         app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+
+    <ImageButton
+        android:id="@+id/profileImageButton"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@android:drawable/picture_frame"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/editTextUserName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
