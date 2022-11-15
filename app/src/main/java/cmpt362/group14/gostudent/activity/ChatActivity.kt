@@ -66,7 +66,9 @@ class ChatActivity : AppCompatActivity() {
                 for (dc in value!!.documentChanges) {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
-                            val chatMessage: ChatMessage? = value.documents[0].toObject(ChatMessage::class.java)
+                            //val chatMessage: ChatMessage? = value.documents[0].toObject(ChatMessage::class.java)
+                            val chatMessage: ChatMessage? =
+                                dc.document.toObject(ChatMessage::class.java)
                             if (chatMessage!!.fromId == FirebaseAuth.getInstance().uid) {
                                 val currentUser: User? = HomeChatActivity.currentUser
                                 adapter.add(ChatFromItem(chatMessage.text, currentUser!!))
