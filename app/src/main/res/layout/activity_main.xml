@@ -16,7 +16,6 @@
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
-        android:text="Hello World!"
         app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
