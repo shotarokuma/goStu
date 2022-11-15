@@ -24,6 +24,7 @@ class HomeChatActivity : AppCompatActivity() {
     private lateinit var uid: String
     private lateinit var latestView: RecyclerView
     private var adapter = GroupAdapter<ViewHolder>()
+    private var latestMessagesList = ArrayList<ChatMessage>()
 
     companion object {
         var currentUser: User? = null
@@ -63,16 +64,16 @@ class HomeChatActivity : AppCompatActivity() {
 
     private fun refreshRecyclerViewmessages() {
         adapter.clear()
-        latestMessagesMap.values.forEach {
+        latestMessagesList.forEach {
             adapter.add(LatestMessagesRow(it))
         }
     }
 
-    var latestMessagesMap = HashMap<String, ChatMessage>()
-
     private fun listenLatestMessages() {
-        val fromId: String? = FirebaseAuth.getInstance().uid
-        db.collection("user")
+        val toId: String? = FirebaseAuth.getInstance().uid
+        db.collection("latest-message")
+            .whereEqualTo("toId", toId)
+            .orderBy("createdTime")
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.w(TAG, "Listen failed.", error)
@@ -82,8 +83,8 @@ class HomeChatActivity : AppCompatActivity() {
                 for (dc in value!!.documentChanges) {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
-                            val chatMessage = dc.document.data
-                            println(chatMessage)
+                            val chatMessage = dc.document.toObject(ChatMessage::class.java)
+                            latestMessagesList.add(0, chatMessage)
                             refreshRecyclerViewmessages()
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
