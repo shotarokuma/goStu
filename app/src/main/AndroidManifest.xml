@@ -16,7 +16,10 @@
         android:theme="@style/Theme.GoStudent"
         tools:targetApi="31">
         <activity
-            android:name=".activity.addItemActivity"
+            android:name=".CatalogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AddItemActivity"
             android:exported="false" />
         <activity
             android:name=".activity.ItemActivity"
