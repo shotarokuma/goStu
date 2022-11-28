@@ -35,14 +35,12 @@
                     android:id="@+id/itemName"
                     android:textColor="@color/black"
                     android:textSize="26sp"
-                    android:text="Playstation 5"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/itemPrice"
-                    android:text="$500"
                     android:layout_marginTop="5dp"/>
             </LinearLayout>
         </LinearLayout>
