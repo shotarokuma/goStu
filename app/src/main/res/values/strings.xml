@@ -12,7 +12,7 @@
     <string name="go_back">Press here to go back</string>
 
     <string name="selected_item">Select condition:</string>
-    <string-array name="Languages">
+    <string-array name="conditions">
         <item>New</item>
         <item>Used</item>
         <item>Fair</item>
