@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
@@ -14,6 +15,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import cmpt362.group14.gostudent.R
+import cmpt362.group14.gostudent.activity.HomeChatActivity.Companion.TAG
 import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -68,9 +70,6 @@ class AddItemActivity : AppCompatActivity() {
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
                 galleryImgUri = it.data?.data
-
-//                TODO("have to image button to show selected img")
-//                profileImageButton.setImageURI(galleryImgUri)
             }
         }
     }
@@ -80,6 +79,11 @@ class AddItemActivity : AppCompatActivity() {
         val ref = storage.getReference("/images/$fname")
         val seller = FirebaseAuth.getInstance().currentUser
 
+        if(galleryImgUri == null){
+            Log.w(TAG, "CreateUser fail")
+            Toast.makeText(this, "Select image", Toast.LENGTH_SHORT).show()
+             return
+        }
         val putFile = ref.putFile(galleryImgUri!!)
         putFile.addOnSuccessListener {
             ref.downloadUrl.addOnSuccessListener {

@@ -52,8 +52,8 @@ class ItemActivity : AppCompatActivity() {
         sellerImageView = findViewById(R.id.seller_image)
         itemImages = findViewById(R.id.itemImages)
 
-        nameTextView.text = item.name
-        priceTextView.text = item.price.toString()
+        nameTextView.text = "Name:" + item.name
+        priceTextView.text = "$" + item.price.toString()
         descriptionTextView.text = item.description
         conditionValueTextView.text = item.condition
         if (item.send == 0) {
@@ -61,9 +61,6 @@ class ItemActivity : AppCompatActivity() {
         } else {
             doorTextView.setTypeface(doorTextView.typeface, Typeface.BOLD)
         }
-//        sellerNameTextView.text = seller!!.name
-
-//        Picasso.get().load(seller!!.profileImageUrl).into(sellerImageView)
         Picasso.get().load(item.displayImageUrl).into(itemImages)
     }
 
