@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="cmpt362.group14.gostudent">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +15,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GoStudent"
         tools:targetApi="31">
-
+        <activity
+            android:name=".activity.UserItemsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ProfileSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.CatalogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AddItemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ItemActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.LoginActivity"
             android:exported="false" />

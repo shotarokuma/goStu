@@ -119,6 +119,18 @@ class HomeChatActivity : AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
+
+            R.id.profile_settings -> {
+                intent = Intent(this, ProfileSettingsActivity::class.java)
+                startActivity(intent)
+            }
+
+            R.id.my_items -> {
+                intent = Intent(this, UserItemsActivity::class.java)
+                startActivity(intent)
+            }
+
+
         }
         return super.onOptionsItemSelected(item)
     }

@@ -2,38 +2,30 @@ package cmpt362.group14.gostudent.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.User
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.gson.Gson
-import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 
-class NewMessageActivity : AppCompatActivity() {
+class CatalogActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
-    private lateinit var newMessageRecycleView: RecyclerView
 
     companion object {
-        const val USER_KEY = "USER_KEY"
+        const val ITEM_KEY = "ITEM_KEY"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_message)
-        newMessageRecycleView = findViewById(R.id.newMessage_recycleView)
+        setContentView(R.layout.activity_catalog)
         db = FirebaseFirestore.getInstance()
-        fetchUsers()
+        fetchItems()
     }
 
-    private fun fetchUsers() {
-        db.collection("user")
+    private fun fetchItems() {
+        db.collection("item")
             .get()
             .addOnCompleteListener(
                 OnCompleteListener {
@@ -50,28 +42,13 @@ class NewMessageActivity : AppCompatActivity() {
                             }
                         }
                         adapter.setOnItemClickListener { item, view ->
-                            val userItem = item as UserItem
                             intent = Intent(view.context, ChatActivity::class.java)
-                            intent.putExtra(USER_KEY, Gson().toJson(userItem.user))
+//                            intent.putExtra(ItemActivity.ITEM_KEY, Gson().toJson())
                             startActivity(intent)
                         }
-                        newMessageRecycleView.adapter = adapter
+//                TODO("have to implement adapter && recycle view to show list of item dynamically")
                     }
                 }
             )
-    }
-}
-
-class UserItem(val user: User) : Item<ViewHolder>() {
-    override fun bind(viewHolder: ViewHolder, position: Int) {
-        val textView: TextView = viewHolder.itemView.findViewById<TextView>(R.id.textView_new_message)
-        textView.text = user.name
-
-        val imageview: ImageView = viewHolder.itemView.findViewById(R.id.imageView_new_message)
-        Picasso.get().load(user.profileImageUrl).into(imageview)
-    }
-
-    override fun getLayout(): Int {
-        return R.layout.newmessage_row
     }
 }

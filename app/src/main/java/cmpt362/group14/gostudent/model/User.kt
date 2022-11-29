@@ -1,6 +1,6 @@
 package cmpt362.group14.gostudent.model
 
-import java.util.*
+import java.util.Date
 
 data class User(
     val uid: String = "",

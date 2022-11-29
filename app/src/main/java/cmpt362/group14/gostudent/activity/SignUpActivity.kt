@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.util.*
+import java.util.UUID
 
 class SignUpActivity : AppCompatActivity() {
     private val TAG = "SignUpActivity"
@@ -34,6 +34,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var newUser: User
     private lateinit var db: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +48,12 @@ class SignUpActivity : AppCompatActivity() {
         profileImageButton = findViewById(R.id.profileImageButton)
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        storage = FirebaseStorage.getInstance()
 
         galleryResult = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
-                Log.d(TAG, "Image Selected")
                 galleryImgUri = it.data?.data
                 profileImageButton.setImageURI(galleryImgUri)
             }
@@ -111,7 +112,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun storeAccount(uid: String, name: String, email: String, password: String) {
         // store image in firebase storage
         val fname = UUID.randomUUID().toString()
-        val ref = FirebaseStorage.getInstance().getReference("/images/$fname")
+        val ref = storage.getReference("/images/$fname")
 
         val putFile = ref.putFile(galleryImgUri!!)
         putFile.addOnSuccessListener {
