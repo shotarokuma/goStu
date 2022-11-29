@@ -16,10 +16,10 @@
         android:theme="@style/Theme.GoStudent"
         tools:targetApi="31">
         <activity
-            android:name=".MarketplaceActivity"
+            android:name=".activity.MarketplaceActivity"
             android:exported="false" />
         <activity
-            android:name=".CatalogActivity"
+            android:name=".activity.CatalogActivity"
             android:exported="false" />
         <activity
             android:name=".activity.AddItemActivity"

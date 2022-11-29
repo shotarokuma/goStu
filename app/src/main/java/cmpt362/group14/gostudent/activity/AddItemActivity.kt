@@ -18,7 +18,7 @@ import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.util.UUID
+import java.util.*
 
 class AddItemActivity : AppCompatActivity() {
     private lateinit var storage: FirebaseStorage
@@ -47,6 +47,7 @@ class AddItemActivity : AppCompatActivity() {
         publicCheckBox = findViewById(R.id.public_meetup)
         meetUpCheckBox = findViewById(R.id.door_pickup)
         publicCheckBox.isChecked = true
+
 
         priceEditText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
         publicCheckBox.setOnClickListener {
@@ -78,7 +79,7 @@ class AddItemActivity : AppCompatActivity() {
     fun onStoreItem(view: View) {
         val fname = UUID.randomUUID().toString()
         val ref = storage.getReference("/images/$fname")
-        val seller = FirebaseAuth.getInstance()
+        val seller = FirebaseAuth.getInstance().currentUser
 
         val putFile = ref.putFile(galleryImgUri!!)
         putFile.addOnSuccessListener {
@@ -86,7 +87,7 @@ class AddItemActivity : AppCompatActivity() {
                 newItem = Item(
                     name = nameEditText.text.toString(),
                     price = priceEditText.text.toString().toDouble(),
-                    sellerId = seller.uid!!,
+                    sellerId = seller!!.uid,
                     description = descriptionEditText.text.toString(),
                     condition = conditionSpinner.selectedItem.toString(),
                     send = send,

@@ -15,22 +15,22 @@
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPage"
+        <!-- TODO: Change to viewPager, implement multiple images per item -->
+        <ImageView
+            android:id="@+id/itemImages"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
 
-    <TextView
-        android:id="@+id/name_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/viewPage"
-        android:layout_marginHorizontal="15dp"
-        android:layout_marginTop="5dp"
-        android:text="Name"
-        android:textStyle="bold"
-        android:textSize="22sp">
-    </TextView>
+        <TextView
+            android:id="@+id/name_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemImages"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="5dp"
+            android:text="Name"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/price_label"
