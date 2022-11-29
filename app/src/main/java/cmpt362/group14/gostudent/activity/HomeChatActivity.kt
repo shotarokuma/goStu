@@ -62,7 +62,7 @@ class HomeChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun refreshRecyclerViewmessages() {
+    private fun refreshRecyclerViewMessages() {
         adapter.clear()
         latestMessagesList.forEach {
             adapter.add(LatestMessagesRow(it))
@@ -85,7 +85,7 @@ class HomeChatActivity : AppCompatActivity() {
                         DocumentChange.Type.ADDED -> {
                             val chatMessage = dc.document.toObject(ChatMessage::class.java)
                             latestMessagesList.add(0, chatMessage)
-                            refreshRecyclerViewmessages()
+                            refreshRecyclerViewMessages()
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
                         DocumentChange.Type.REMOVED -> TODO("Not yet implemented")

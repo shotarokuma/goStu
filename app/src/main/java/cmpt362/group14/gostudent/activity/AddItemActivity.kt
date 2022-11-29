@@ -18,7 +18,7 @@ import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.util.*
+import java.util.UUID
 
 class AddItemActivity : AppCompatActivity() {
     private lateinit var storage: FirebaseStorage
@@ -47,7 +47,6 @@ class AddItemActivity : AppCompatActivity() {
         publicCheckBox = findViewById(R.id.public_meetup)
         meetUpCheckBox = findViewById(R.id.door_pickup)
         publicCheckBox.isChecked = true
-
 
         priceEditText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
         publicCheckBox.setOnClickListener {

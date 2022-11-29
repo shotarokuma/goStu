@@ -126,8 +126,8 @@ class ChatActivity : AppCompatActivity() {
         db.collection("latest-message")
             .document()
             .set(chatMessage)
-        //adapter.clear()
-        //listenForMessages()
+        // adapter.clear()
+        // listenForMessages()
     }
 
     class ChatFromItem(val text: String, val user: User) : Item<ViewHolder>() {

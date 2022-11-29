@@ -14,8 +14,10 @@ import cmpt362.group14.gostudent.model.Item
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 
-class MarketplaceAdapter(private val context: Activity, private val arrayList: ArrayList<Item>) : ArrayAdapter<Item>(context,
-    R.layout.list_item, arrayList) {
+class MarketplaceAdapter(private val context: Activity, private val arrayList: ArrayList<Item>) : ArrayAdapter<Item>(
+    context,
+    R.layout.list_item, arrayList
+) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -25,8 +27,6 @@ class MarketplaceAdapter(private val context: Activity, private val arrayList: A
         val textViewItemName: TextView = view.findViewById(R.id.itemName)
         val textViewPrice: TextView = view.findViewById(R.id.itemPrice)
 
-
-        //imageView.setImageResource(arrayList[position].displayImageUrl)
         val item = arrayList[position]
         textViewItemName.text = item.name
         textViewPrice.text = item.price.toString()
