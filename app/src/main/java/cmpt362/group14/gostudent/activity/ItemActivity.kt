@@ -26,9 +26,11 @@ class ItemActivity : AppCompatActivity() {
     private lateinit var doorTextView: TextView
     private lateinit var sellerNameTextView: TextView
     private lateinit var sellerImageView: ImageView
+    private lateinit var itemImages: ImageView
 
     companion object {
         const val USER_KEY = "USER_KEY"
+        const val ITEM_KEY = "ITEM_KEY"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +38,7 @@ class ItemActivity : AppCompatActivity() {
         setContentView(R.layout.activity_item)
 
         db = FirebaseFirestore.getInstance()
-        val itemData: String? = intent.getStringExtra(CatalogActivity.ITEM_KEY)
+        val itemData: String? = intent.getStringExtra(ITEM_KEY)
         item = Gson().fromJson(itemData!!, Item::class.java)
         onFetchSeller(item.sellerId)
 
@@ -48,6 +50,7 @@ class ItemActivity : AppCompatActivity() {
         doorTextView = findViewById(R.id.door_pickup)
         sellerNameTextView = findViewById(R.id.seller_name)
         sellerImageView = findViewById(R.id.seller_image)
+        itemImages = findViewById(R.id.itemImages)
 
         nameTextView.text = item.name
         priceTextView.text = item.price.toString()
@@ -58,8 +61,10 @@ class ItemActivity : AppCompatActivity() {
         } else {
             doorTextView.setTypeface(doorTextView.typeface, Typeface.BOLD)
         }
-        sellerNameTextView.text = seller!!.name
-        Picasso.get().load(seller!!.profileImageUrl).into(sellerImageView)
+//        sellerNameTextView.text = seller!!.name
+
+//        Picasso.get().load(seller!!.profileImageUrl).into(sellerImageView)
+        Picasso.get().load(item.displayImageUrl).into(itemImages)
     }
 
     private fun onFetchSeller(sellerId: String) {
@@ -68,11 +73,16 @@ class ItemActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener {
                 seller = it.documents[0].toObject(User::class.java)
+                sellerNameTextView.text = seller!!.name
+                Picasso.get()
+                    .load(seller!!.profileImageUrl)
+                    .into(sellerImageView)
             }
     }
 
     fun onContact(view: View) {
         val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra(USER_KEY, Gson().toJson(seller))
+        startActivity(intent)
     }
 }

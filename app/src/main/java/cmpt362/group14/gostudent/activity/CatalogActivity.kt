@@ -46,7 +46,6 @@ class CatalogActivity : AppCompatActivity() {
 //                            intent.putExtra(ItemActivity.ITEM_KEY, Gson().toJson())
                             startActivity(intent)
                         }
-//                TODO("have to implement adapter && recycle view to show list of item dynamically")
                     }
                 }
             )
