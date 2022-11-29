@@ -21,12 +21,14 @@ import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 
 class ChatActivity : AppCompatActivity() {
+    private val TAG = "CHAT ACTIVITY TAG"
     private lateinit var sendButton: Button
     private lateinit var editTextChat: EditText
     private lateinit var db: FirebaseFirestore
     private lateinit var recyclerView: RecyclerView
     private lateinit var user: User
     private lateinit var toUser: User
+    private lateinit var currentUser: User
     private var toId: String? = null
     private var fromId: String? = null
     private val adapter = GroupAdapter<ViewHolder>()
@@ -37,6 +39,7 @@ class ChatActivity : AppCompatActivity() {
 
         val userData: String? = intent.getStringExtra(NewMessageActivity.USER_KEY)
         toUser = Gson().fromJson(userData!!, User::class.java)
+        Log.d(TAG, "onCreate: toUser: ${toUser.name}")
         supportActionBar?.title = toUser.name
 
         db = FirebaseFirestore.getInstance()
@@ -45,7 +48,8 @@ class ChatActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerview_chat)
         recyclerView.adapter = adapter
 
-        listenForMessages()
+//        listenForMessages()
+        getCurrentUser()
 
         sendButton = findViewById(R.id.send_chat_button)
         editTextChat = findViewById(R.id.edittext_chat)
@@ -53,6 +57,25 @@ class ChatActivity : AppCompatActivity() {
             performSendMessage()
         }
     }
+
+    /**
+     * Sets currentUser, then launches listenForMessages()
+     */
+    private fun getCurrentUser() {
+        val uid = FirebaseAuth.getInstance().uid
+        db.collection("user")
+            .whereEqualTo("uid", uid)
+            .get()
+            .addOnSuccessListener {
+                currentUser = it.documents[0].toObject(User::class.java)!!
+                Log.d(TAG, "Current user ${currentUser?.name}")
+                listenForMessages()
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents: ", exception)
+            }
+    }
+
     private fun listenForMessages() {
         fromId = FirebaseAuth.getInstance().uid
         toId = toUser.uid
@@ -61,7 +84,7 @@ class ChatActivity : AppCompatActivity() {
             .orderBy("createdTime")
             .addSnapshotListener { value, error ->
                 if (error != null) {
-                    Log.w(HomeChatActivity.TAG, "Listen failed.", error)
+                    Log.w(TAG, "Listen failed.", error)
                     return@addSnapshotListener
                 }
 
@@ -70,8 +93,8 @@ class ChatActivity : AppCompatActivity() {
                         DocumentChange.Type.ADDED -> {
                             val chatMessage: ChatMessage =
                                 dc.document.toObject(ChatMessage::class.java)
+                            Log.d(TAG, "listenForMessages: ${chatMessage.text}")
                             if (chatMessage.fromId == FirebaseAuth.getInstance().uid && chatMessage.toId == toUser.uid) {
-                                val currentUser: User? = HomeChatActivity.currentUser
                                 adapter.add(ChatFromItem(chatMessage.text, currentUser!!))
                             } else if (chatMessage.toId == FirebaseAuth.getInstance().uid) {
                                 adapter.add(ChatToItem(chatMessage.text, toUser))
@@ -103,8 +126,8 @@ class ChatActivity : AppCompatActivity() {
         db.collection("latest-message")
             .document()
             .set(chatMessage)
-        adapter.clear()
-        listenForMessages()
+        // adapter.clear()
+        // listenForMessages()
     }
 
     class ChatFromItem(val text: String, val user: User) : Item<ViewHolder>() {

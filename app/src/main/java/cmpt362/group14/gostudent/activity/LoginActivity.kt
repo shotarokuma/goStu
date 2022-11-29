@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
                 // update UI
                 Log.d(TAG, "SignIn success")
                 Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                val intent: Intent = Intent(this, HomeChatActivity::class.java)
+                val intent: Intent = Intent(this, MarketplaceActivity::class.java)
                 startActivity(intent)
             } else {
                 // tell user sign in    private val TAG = "EMAIL_PASSWORD" failed, update UI

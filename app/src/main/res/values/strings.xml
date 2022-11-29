@@ -10,4 +10,11 @@
     <string name="log_in_text_view">Already Have an account? Press here to log in.</string>
     <string name="login">login</string>
     <string name="go_back">Press here to go back</string>
+
+    <string name="selected_item">Select condition:</string>
+    <string-array name="conditions">
+        <item>New</item>
+        <item>Used</item>
+        <item>Fair</item>
+    </string-array>
 </resources>

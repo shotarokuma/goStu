@@ -21,7 +21,7 @@ class NewMessageActivity : AppCompatActivity() {
     private lateinit var newMessageRecycleView: RecyclerView
 
     companion object {
-        val USER_KEY = "USER_KEY"
+        const val USER_KEY = "USER_KEY"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
