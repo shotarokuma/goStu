@@ -3,10 +3,10 @@ package cmpt362.group14.gostudent.activity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import  android.widget.EditText
-import  android.widget.Toast
-import  android.widget.ImageView
-import  android.widget.TextView
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import cmpt362.group14.gostudent.R
