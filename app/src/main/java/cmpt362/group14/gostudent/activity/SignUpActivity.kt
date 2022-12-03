@@ -1,7 +1,6 @@
 package cmpt362.group14.gostudent.activity
 
 import android.app.Activity
-import android.app.Notification
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -148,16 +147,17 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun getToken(){
-        notification.token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
+    private fun getToken() {
+        notification.token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+                token = task.result
             }
-            token = task.result
-        })
+        )
     }
-
 
     private fun updateUI(user: FirebaseUser?) {
         Log.d(TAG, "update UI")

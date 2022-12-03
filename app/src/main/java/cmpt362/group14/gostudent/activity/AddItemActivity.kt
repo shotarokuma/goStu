@@ -79,10 +79,10 @@ class AddItemActivity : AppCompatActivity() {
         val ref = storage.getReference("/images/$fname")
         val seller = FirebaseAuth.getInstance().currentUser
 
-        if(galleryImgUri == null){
+        if (galleryImgUri == null) {
             Log.w(TAG, "CreateUser fail")
             Toast.makeText(this, "Select image", Toast.LENGTH_SHORT).show()
-             return
+            return
         }
         val putFile = ref.putFile(galleryImgUri!!)
         putFile.addOnSuccessListener {

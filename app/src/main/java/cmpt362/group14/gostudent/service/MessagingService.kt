@@ -1,6 +1,5 @@
 package cmpt362.group14.gostudent.service
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -13,7 +12,7 @@ import cmpt362.group14.gostudent.activity.SignUpActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
-class MessagingService: FirebaseMessagingService() {
+class MessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
     }
@@ -25,7 +24,7 @@ class MessagingService: FirebaseMessagingService() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val channelId = "Default"
-        val builder:NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
+        val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(resources.getString(R.string.new_message))
             .setContentText(message.notification!!.body)
