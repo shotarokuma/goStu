@@ -3,14 +3,16 @@ package cmpt362.group14.gostudent.activity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import  android.widget.EditText
+import  android.widget.Toast
+import  android.widget.ImageView
+import  android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.ChatMessage
 import cmpt362.group14.gostudent.model.User
+import cmpt362.group14.gostudent.service.ApiService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,6 +21,10 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
+import retrofit2.HttpException
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.concurrent.thread
 
 class ChatActivity : AppCompatActivity() {
     private val TAG = "CHAT ACTIVITY TAG"
@@ -68,7 +74,7 @@ class ChatActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener {
                 currentUser = it.documents[0].toObject(User::class.java)!!
-                Log.d(TAG, "Current user ${currentUser?.name}")
+                Log.d(TAG, "Current user ${currentUser.name}")
                 listenForMessages()
             }
             .addOnFailureListener { exception ->
@@ -95,7 +101,7 @@ class ChatActivity : AppCompatActivity() {
                                 dc.document.toObject(ChatMessage::class.java)
                             Log.d(TAG, "listenForMessages: ${chatMessage.text}")
                             if (chatMessage.fromId == FirebaseAuth.getInstance().uid && chatMessage.toId == toUser.uid) {
-                                adapter.add(ChatFromItem(chatMessage.text, currentUser!!))
+                                adapter.add(ChatFromItem(chatMessage.text, currentUser))
                             } else if (chatMessage.toId == FirebaseAuth.getInstance().uid) {
                                 adapter.add(ChatToItem(chatMessage.text, toUser))
                             }
@@ -119,6 +125,7 @@ class ChatActivity : AppCompatActivity() {
             .document()
             .set(chatMessage)
             .addOnSuccessListener {
+                onSendToServer(chat)
                 editTextChat.text.clear()
                 recyclerView.scrollToPosition(adapter.itemCount - 1)
             }
@@ -128,6 +135,33 @@ class ChatActivity : AppCompatActivity() {
             .set(chatMessage)
         // adapter.clear()
         // listenForMessages()
+    }
+
+    private fun onSendToServer(chat: String) {
+        val service = Retrofit.Builder()
+            .baseUrl("https://p2fe2plvrbbi7f6lnjypb4qfh40yxnpw.lambda-url.us-east-2.on.aws/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+
+        db.collection("user")
+            .whereEqualTo("uid", toId)
+            .get()
+            .addOnSuccessListener {
+                val token = it.documents[0].toObject(User::class.java)!!.fcm
+                thread {
+                    try {
+                        service.sendMessage(
+                            token = token,
+                            body = chat,
+                            title = resources.getString(R.string.new_message)
+                        ).execute()
+                    } catch (e: HttpException) {
+                        Toast.makeText(this, "Sending message failed.", Toast.LENGTH_SHORT).show()
+                        Log.e("text", e.localizedMessage)
+                    }
+                }
+            }
     }
 
     class ChatFromItem(val text: String, val user: User) : Item<ViewHolder>() {
