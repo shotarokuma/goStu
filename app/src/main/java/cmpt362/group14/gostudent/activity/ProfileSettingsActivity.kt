@@ -1,18 +1,17 @@
 package cmpt362.group14.gostudent.activity
 
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
@@ -136,7 +135,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
 
             }
             .addOnFailureListener { exception ->
-                Log.w(HomeChatActivity.TAG, "Error getting documents: ", exception)
+                Log.w(HomeChatFragment.TAG, "Error getting documents: ", exception)
             }
     }
 

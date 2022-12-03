@@ -15,12 +15,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import cmpt362.group14.gostudent.R
-import cmpt362.group14.gostudent.activity.HomeChatActivity.Companion.TAG
+import cmpt362.group14.gostudent.activity.HomeChatFragment.Companion.TAG
 import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.util.UUID
+import java.util.*
 
 class AddItemActivity : AppCompatActivity() {
     private lateinit var storage: FirebaseStorage

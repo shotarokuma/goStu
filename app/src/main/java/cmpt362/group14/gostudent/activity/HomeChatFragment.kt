@@ -3,9 +3,10 @@ package cmpt362.group14.gostudent.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import cmpt362.group14.gostudent.R
@@ -19,7 +20,7 @@ import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 
-class HomeChatActivity : AppCompatActivity() {
+class HomeChatFragment : Fragment() {
     private lateinit var db: FirebaseFirestore
     private lateinit var uid: String
     private lateinit var latestView: RecyclerView
@@ -30,20 +31,30 @@ class HomeChatActivity : AppCompatActivity() {
         var currentUser: User? = null
         val TAG = "LatestMessages"
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_chat)
 
-        latestView = findViewById(R.id.latest_message_recyclerView)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.activity_home_chat, null)
+        super.onCreate(savedInstanceState)
+
+        latestView = view.findViewById(R.id.latest_message_recyclerView)
         latestView.adapter = adapter
-        latestView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        latestView.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         db = FirebaseFirestore.getInstance()
         uid = FirebaseAuth.getInstance().uid.toString()
 
         adapter.setOnItemClickListener { item, _ ->
             Log.d(TAG, "123")
-            val intent: Intent = Intent(this, ChatActivity::class.java)
+            val intent: Intent = Intent(requireContext(), ChatActivity::class.java)
 
             val row = item as LatestMessagesRow
             intent.putExtra(NewMessageActivity.USER_KEY, Gson().toJson(row.chatPartnerUser))
@@ -56,10 +67,11 @@ class HomeChatActivity : AppCompatActivity() {
 
         val uid = FirebaseAuth.getInstance().uid
         if (uid == null) {
-            val intent = Intent(this, SignUpActivity::class.java)
+            val intent = Intent(requireContext(), SignUpActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
+        return view
     }
 
     private fun refreshRecyclerViewMessages() {
@@ -106,16 +118,23 @@ class HomeChatActivity : AppCompatActivity() {
                 Log.w(TAG, "Error getting documents: ", exception)
             }
     }
-
+    //TODO create options menu in new Activity
+    /*
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.message_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.new_msg -> {
-                intent = Intent(this, NewMessageActivity::class.java)
+                //??
+                val intent = Intent(requireContext(), NewMessageActivity::class.java)
                 startActivity(intent)
             }
             R.id.sign_out -> {
+                //??
                 FirebaseAuth.getInstance().signOut()
-                intent = Intent(this, SignUpActivity::class.java)
+                val intent = Intent(requireContext(), SignUpActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
@@ -123,8 +142,5 @@ class HomeChatActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.message_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+     */
 }

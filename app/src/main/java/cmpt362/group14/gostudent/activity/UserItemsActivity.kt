@@ -1,15 +1,9 @@
 package cmpt362.group14.gostudent.activity
 
-import android.app.Activity
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import cmpt362.group14.gostudent.ItemAdapter
-import cmpt362.group14.gostudent.MarketplaceAdapter
-import cmpt362.group14.gostudent.R
-import cmpt362.group14.gostudent.databinding.ActivityAddItemBinding.inflate
-import cmpt362.group14.gostudent.databinding.ActivityMarketplaceBinding
 import cmpt362.group14.gostudent.databinding.ActivityUserItemsBinding
 import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
@@ -42,7 +36,7 @@ class UserItemsActivity : AppCompatActivity() {
             .whereEqualTo("sellerId",uid)
             .addSnapshotListener { value, error ->
                 if (error != null) {
-                    Log.w(HomeChatActivity.TAG, "Listen failed.", error)
+                    Log.w(HomeChatFragment.TAG, "Listen failed.", error)
                     return@addSnapshotListener
                 }
 
