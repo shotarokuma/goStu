@@ -1,4 +1,4 @@
-package cmpt362.group14.gostudent.activity
+package cmpt362.group14.gostudent.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cmpt362.group14.gostudent.MarketplaceAdapter
+import cmpt362.group14.gostudent.activity.AddItemActivity
 import cmpt362.group14.gostudent.databinding.ActivityMarketplaceBinding
 import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.firestore.DocumentChange

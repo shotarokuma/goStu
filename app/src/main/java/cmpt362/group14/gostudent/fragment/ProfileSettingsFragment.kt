@@ -1,14 +1,17 @@
-package cmpt362.group14.gostudent.activity
+package cmpt362.group14.gostudent.fragment
 
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -16,7 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
-class ProfileSettingsActivity : AppCompatActivity() {
+class ProfileSettingsFragment : Fragment() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
@@ -32,16 +35,19 @@ class ProfileSettingsActivity : AppCompatActivity() {
     private lateinit var cancelButton: Button
     private lateinit var profileImageButton: ImageButton
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile_settings)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.activity_profile_settings, null)
 
-        userNameEditText = findViewById(R.id.editTextUserName)
-        emailEditText = findViewById(R.id.editTextEmailAddress)
-        passwordEditText = findViewById(R.id.editTextPassword)
-        saveButton = findViewById(R.id.save_changes)
-        cancelButton = findViewById(R.id.cancel_changes)
-        profileImageButton = findViewById(R.id.profileImageButton)
+        userNameEditText = view.findViewById(R.id.editTextUserName)
+        emailEditText = view.findViewById(R.id.editTextEmailAddress)
+        passwordEditText = view.findViewById(R.id.editTextPassword)
+        saveButton = view.findViewById(R.id.save_changes)
+        cancelButton = view.findViewById(R.id.cancel_changes)
+        profileImageButton = view.findViewById(R.id.profileImageButton)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
@@ -55,17 +61,13 @@ class ProfileSettingsActivity : AppCompatActivity() {
             val password: String = passwordEditText.text.toString()
             updateAccount(name, email, password)
         }
-
-        cancelButton.setOnClickListener {
-            finish()
-        }
-
+        return view
     }
 
     private fun updateAccount(name: String, email: String, password: String) {
         if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
             Toast.makeText(
-                this,
+                requireContext(),
                 "Please enter an email or password",
                 Toast.LENGTH_SHORT
             ).show()
@@ -73,7 +75,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
         }
         if (galleryImgUri == null) {
             Toast.makeText(
-                this,
+                requireContext(),
                 "Please enter a profile picture",
                 Toast.LENGTH_SHORT
             ).show()
@@ -104,14 +106,14 @@ class ProfileSettingsActivity : AppCompatActivity() {
 //                    .document()
 //                    .set(newUser)
 //                    .addOnSuccessListener {
-//                        Toast.makeText(this, "Create Account Successful", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(requireContext(), "Create Account Successful", Toast.LENGTH_SHORT).show()
 //                        val user: FirebaseUser? = auth.currentUser
 //                        updateUI(user)
 //                    }
 //            }
         }
         putFile.addOnFailureListener {
-            Toast.makeText(this, "Store Image Failed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Store Image Failed", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -1,4 +1,4 @@
-package cmpt362.group14.gostudent.activity
+package cmpt362.group14.gostudent.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import cmpt362.group14.gostudent.R
+import cmpt362.group14.gostudent.activity.ChatActivity
+import cmpt362.group14.gostudent.activity.NewMessageActivity
+import cmpt362.group14.gostudent.activity.SignUpActivity
 import cmpt362.group14.gostudent.model.ChatMessage
 import cmpt362.group14.gostudent.model.User
 import cmpt362.group14.gostudent.view.LatestMessagesRow

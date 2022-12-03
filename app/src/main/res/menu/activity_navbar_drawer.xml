@@ -12,5 +12,13 @@
             android:id="@+id/nav_chat"
             android:icon="@drawable/ic_baseline_message_24"
             android:title="Chat" />
+        <item
+            android:id="@+id/nav_user_items"
+            android:icon="@drawable/ic_launcher_foreground"
+            android:title="Edit Items" />
+        <item
+            android:id="@+id/nav_edit_profile"
+            android:icon="@drawable/ic_baseline_person_24"
+            android:title="Profile" />
     </group>
 </menu>
