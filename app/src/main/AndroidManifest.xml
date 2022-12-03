@@ -19,9 +19,6 @@
             android:name=".activity.MarketplaceActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.CatalogActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.AddItemActivity"
             android:exported="false" />
         <activity
@@ -56,6 +53,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.MessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
