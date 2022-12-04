@@ -17,6 +17,7 @@ import cmpt362.group14.gostudent.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import java.util.*
 
 class ProfileSettingsFragment : Fragment() {
@@ -132,7 +133,7 @@ class ProfileSettingsFragment : Fragment() {
                     /*
                     Unable to display the stored image
                      */
-                    profileImageButton.setImageURI(user.profileImageUrl.toUri())
+                    Picasso.get().load(user.profileImageUrl).into(profileImageButton)
                 }
 
             }

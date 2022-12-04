@@ -144,6 +144,7 @@
                 android:text="Door pickup"/>
 
             <Button
+                android:id="@+id/changeImagesBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/door_pickup"
@@ -152,7 +153,7 @@
                 android:layout_marginStart="121dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="130dp"
-                android:onClick="onAddItemImg"
+                android:onClick="onChangeImage"
                 android:text="change images" />
 
 
