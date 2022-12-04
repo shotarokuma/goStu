@@ -1,7 +1,9 @@
 package cmpt362.group14.gostudent.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.Item
 import cmpt362.group14.gostudent.model.User
@@ -19,6 +23,8 @@ import com.squareup.picasso.Picasso
 import java.util.*
 
 class EditItemActivity : AppCompatActivity() {
+    private var galleryImgUri: Uri? = null
+    private lateinit var galleryResult: ActivityResultLauncher<Intent>
     private lateinit var db: FirebaseFirestore
     private var seller: User? = null
     private lateinit var item: Item
@@ -28,6 +34,7 @@ class EditItemActivity : AppCompatActivity() {
     private lateinit var priceEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var conditionSpinner: Spinner
+    private lateinit var changeImageButton: Button
     private lateinit var publicCheckBox: CheckBox
     private lateinit var meetUpCheckBox: CheckBox
     var array = arrayOf("New", "Used", "Fair")
@@ -53,6 +60,15 @@ class EditItemActivity : AppCompatActivity() {
         conditionSpinner = findViewById(R.id.condition_spinner)
         publicCheckBox = findViewById(R.id.public_meetup)
         meetUpCheckBox = findViewById(R.id.door_pickup)
+        changeImageButton = findViewById(R.id.changeImagesBtn)
+
+        galleryResult = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                galleryImgUri = it.data?.data
+            }
+        }
 
         nameEditText.setText(item.name)
         priceEditText.setText(item.price.toString())
@@ -111,8 +127,10 @@ class EditItemActivity : AppCompatActivity() {
 
     }
 
-    fun onAddItemImg(view: View) {
-
+    fun onChangeImage(view: View) {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        galleryResult.launch(intent)
 
     }
 }
