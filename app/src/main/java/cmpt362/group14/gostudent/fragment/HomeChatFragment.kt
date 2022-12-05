@@ -32,7 +32,7 @@ class HomeChatFragment : Fragment() {
 
     companion object {
         var currentUser: User? = null
-        val TAG = "LatestMessages"
+        val TAG = "LatestMessages TAG"
     }
 
     override fun onCreateView(
@@ -96,9 +96,10 @@ class HomeChatFragment : Fragment() {
                 }
 
                 for (dc in value!!.documentChanges) {
+                    val chatMessage = dc.document.toObject(ChatMessage::class.java)
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
-                            val chatMessage = dc.document.toObject(ChatMessage::class.java)
+                            Log.d(TAG, "listenLatestMessages: ${chatMessage.text}")
                             latestMessagesList.add(0, chatMessage)
                             refreshRecyclerViewMessages()
                         }

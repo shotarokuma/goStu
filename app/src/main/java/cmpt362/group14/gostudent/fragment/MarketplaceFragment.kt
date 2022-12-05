@@ -18,9 +18,11 @@ import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class MarketplaceFragment : Fragment() {
 
+    private lateinit var listenRegistration: ListenerRegistration
     private lateinit var db: FirebaseFirestore
     private lateinit var searchButton: Button
     private lateinit var searchBar: EditText
@@ -55,7 +57,7 @@ class MarketplaceFragment : Fragment() {
     }
 
     private fun fetchItems() {
-        db.collection("item")
+        listenRegistration = db.collection("item")
             .orderBy("createdTime")
             .addSnapshotListener { value, error ->
                 if (error != null) {
@@ -104,5 +106,6 @@ class MarketplaceFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        listenRegistration.remove()
     }
 }
