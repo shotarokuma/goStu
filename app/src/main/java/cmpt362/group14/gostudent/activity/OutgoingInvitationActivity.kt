@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.ChatMessage
 import cmpt362.group14.gostudent.model.User
+import com.google.android.gms.common.api.Batch
 
 import com.google.android.gms.common.api.Response
 import com.google.android.gms.common.api.Result
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.prefs.Preferences
+import kotlin.math.log
 
 class OutgoingInvitationActivity : AppCompatActivity() {
 
@@ -90,8 +92,19 @@ class OutgoingInvitationActivity : AppCompatActivity() {
 //        listenForCallResponseMessages()
 
         imageStopInvitation = findViewById(R.id.imageStopInvitation)
-        imageStopInvitation.setOnClickListener{
-            finish()
+        imageStopInvitation.setOnClickListener {
+            //Delete all outgoing call messages
+            db.collection("user-message")
+                .whereEqualTo("fromId", FirebaseAuth.getInstance().uid)
+                .whereEqualTo("call", true).get().addOnSuccessListener {
+                    it.documents.forEach() {
+                        it.reference.delete().addOnCompleteListener {
+                            println("delete message")
+                        }
+                    }
+                    finish()
+                }
+
         }
 
 //        if (meetingType != null && user != null)

@@ -90,6 +90,7 @@ class ChatActivity : AppCompatActivity() {
                     return@addSnapshotListener
                 }
 
+
                 for (dc in value!!.documentChanges) {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
@@ -106,7 +107,9 @@ class ChatActivity : AppCompatActivity() {
                             }
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
-                        DocumentChange.Type.REMOVED -> TODO("Not yet implemented")
+                        DocumentChange.Type.REMOVED ->{
+                            Log.d(TAG, "listenForMessages: Message removed")
+                        }
                     }
                 }
             }
@@ -184,7 +187,12 @@ class ChatActivity : AppCompatActivity() {
         }
         else -> super.onOptionsItemSelected(item)
     }
-
+    /*
+    Call Flow:
+    1. Send message with call = true, initiateCall = true, callRespones = false, open outgoingActivity
+    2. When receiving above ^ message, open IncomingActivity
+    2. Incoming activity sends either pick = true or pick = false, with callResponse = true
+     */
     private fun performSendCallMessage() {
 //        val chat = editTextChat.text.toString()
         fromId = FirebaseAuth.getInstance().uid
@@ -230,10 +238,30 @@ class ChatActivity : AppCompatActivity() {
                                 if(chatMessage.call == true && chatMessage.callResponse == true)
                                 {
                                     Toast.makeText(this, "ACCEPTED", Toast.LENGTH_SHORT).show()
+                                    //Delete call messages when accepted
+                                    db.collection("user-message")
+                                        .whereIn("fromId", listOf(fromId, toId))
+                                        .whereEqualTo("call", true).get().addOnSuccessListener {
+                                            it.documents.forEach() {
+                                                it.reference.delete().addOnCompleteListener {
+                                                    println("delete message")
+                                                }
+                                            }
+                                        }
                                 }
                                 else if(chatMessage.call == true && chatMessage.callResponse == false)
                                 {
                                     Toast.makeText(this, "REJECTED", Toast.LENGTH_SHORT).show()
+                                    //delete calls when rejected
+                                    db.collection("user-message")
+                                        .whereIn("fromId", listOf(fromId,toId))
+                                        .whereEqualTo("call", true).get().addOnSuccessListener {
+                                            it.documents.forEach() {
+                                                it.reference.delete().addOnCompleteListener {
+                                                    println("delete message")
+                                                }
+                                            }
+                                        }
                                     finish()
                                 }
                             }
@@ -261,7 +289,9 @@ class ChatActivity : AppCompatActivity() {
 
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
-                        DocumentChange.Type.REMOVED -> TODO("Not yet implemented")
+                        DocumentChange.Type.REMOVED ->{
+                            Log.d(TAG, "listenForCallMessages: Message Removed")
+                        }
                     }
                 }
             }
