@@ -5,6 +5,7 @@ import java.util.Date
 
 data class User(
     @DocumentId
+    val id: String = "",
     val uid: String = "",
     val name: String = "",
     val password: String = "",

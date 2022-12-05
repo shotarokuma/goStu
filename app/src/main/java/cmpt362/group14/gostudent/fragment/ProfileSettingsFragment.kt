@@ -60,7 +60,6 @@ class ProfileSettingsFragment : Fragment() {
 
         fetchUserData()
 
-
         galleryResult = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
@@ -70,7 +69,7 @@ class ProfileSettingsFragment : Fragment() {
             }
         }
 
-        profileImageButton.setOnClickListener{
+        profileImageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             galleryResult.launch(intent)
@@ -85,37 +84,38 @@ class ProfileSettingsFragment : Fragment() {
         return view
     }
 
-
-    private fun updateUser(newName: String, newEmail: String, newPassword: String){
+    private fun updateUser(newName: String, newEmail: String, newPassword: String) {
         val fname = UUID.randomUUID().toString()
         val ref = storage.getReference("/images/$fname")
-        if(galleryImgUri == null){
-                ref.downloadUrl.addOnSuccessListener {
-                    val newUser = User(
-                        name = newName,
-                        password = newPassword,
-                        mail = newEmail,
-                        profileImageUrl = user.profileImageUrl
-                    )
-                    db.collection("user")
-                        .document()
-                        .set(newUser)
-                        .addOnSuccessListener {
-                            Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
-                        }
-                }
-        }else{
+        if (galleryImgUri == null) {
+                val newUser = User(
+                    id = user.id,
+                    uid = user.uid,
+                    name = newName,
+                    password = newPassword,
+                    mail = newEmail,
+                    profileImageUrl = user.profileImageUrl
+                )
+                db.collection("user")
+                    .document(user.id)
+                    .set(newUser)
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
+                    }
+        } else {
             val putFile = ref.putFile(galleryImgUri!!)
             putFile.addOnSuccessListener {
                 ref.downloadUrl.addOnSuccessListener {
                     val newUser = User(
+                        id = user.id,
+                        uid = user.uid,
                         name = newName,
                         password = newPassword,
                         mail = newEmail,
                         profileImageUrl = it.toString()
                     )
                     db.collection("user")
-                        .document(uid)
+                        .document(user.id)
                         .set(newUser)
                         .addOnSuccessListener {
                             Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
@@ -126,9 +126,7 @@ class ProfileSettingsFragment : Fragment() {
                 Toast.makeText(context, "Store Image Failed", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
-
 
     private fun fetchUserData() {
         db.collection("user")
@@ -145,7 +143,4 @@ class ProfileSettingsFragment : Fragment() {
                 Log.w(HomeChatFragment.TAG, "Error getting documents: ", exception)
             }
     }
-
-
-
 }
