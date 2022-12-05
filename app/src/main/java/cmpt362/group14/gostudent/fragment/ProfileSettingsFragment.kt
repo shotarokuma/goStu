@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.User
@@ -18,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import java.util.*
+import java.util.UUID
 
 class ProfileSettingsFragment : Fragment() {
 
@@ -118,15 +117,14 @@ class ProfileSettingsFragment : Fragment() {
         }
     }
 
-    fun fetchUserData(){
+    fun fetchUserData() {
         db.collection("user")
             .whereEqualTo("uid", uid)
             .get()
             .addOnSuccessListener {
                 user = it.documents[0].toObject(User::class.java)!!
 //                println("${user?.name}")
-                if(user != null)
-                {
+                if (user != null) {
                     userNameEditText.setText(user.name)
                     emailEditText.setText(user.mail)
                     passwordEditText.setText(user.password)
@@ -135,12 +133,9 @@ class ProfileSettingsFragment : Fragment() {
                      */
                     Picasso.get().load(user.profileImageUrl).into(profileImageButton)
                 }
-
             }
             .addOnFailureListener { exception ->
                 Log.w(HomeChatFragment.TAG, "Error getting documents: ", exception)
             }
     }
-
-
 }

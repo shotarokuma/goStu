@@ -34,7 +34,8 @@ class NavbarActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_market, R.id.nav_chat, R.id.nav_user_items, R.id.nav_edit_profile
-            ), drawerLayout
+            ),
+            drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)

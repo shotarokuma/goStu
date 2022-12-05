@@ -28,7 +28,6 @@ class UserItemsFragment : Fragment() {
     ): View? {
         binding = ActivityUserItemsBinding.inflate(layoutInflater)
 
-
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         uid = auth.currentUser?.uid.toString()
@@ -39,7 +38,7 @@ class UserItemsFragment : Fragment() {
     private fun fetchItems() {
         db.collection("item")
             .orderBy("createdTime")
-            .whereEqualTo("sellerId",uid)
+            .whereEqualTo("sellerId", uid)
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.w(HomeChatFragment.TAG, "Listen failed.", error)

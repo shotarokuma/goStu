@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import cmpt362.group14.gostudent.ItemAdapter.Companion.ITEM_KEY
 import cmpt362.group14.gostudent.activity.EditItemActivity
-import cmpt362.group14.gostudent.activity.ItemActivity
 import cmpt362.group14.gostudent.model.Item
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso

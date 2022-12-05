@@ -2,25 +2,24 @@ package cmpt362.group14.gostudent.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Typeface
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.Item
 import cmpt362.group14.gostudent.model.User
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
-import com.squareup.picasso.Picasso
-import java.util.*
 
 class EditItemActivity : AppCompatActivity() {
     private var galleryImgUri: Uri? = null
@@ -28,7 +27,6 @@ class EditItemActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private var seller: User? = null
     private lateinit var item: Item
-
 
     private lateinit var nameEditText: EditText
     private lateinit var priceEditText: EditText
@@ -52,7 +50,6 @@ class EditItemActivity : AppCompatActivity() {
         val itemData: String? = intent.getStringExtra(ITEM_KEY)
         item = Gson().fromJson(itemData!!, Item::class.java)
         onFetchSeller(item.sellerId)
-
 
         nameEditText = findViewById(R.id.name_input)
         priceEditText = findViewById(R.id.price_input)
@@ -122,15 +119,12 @@ class EditItemActivity : AppCompatActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
-
     fun onStoreItem(view: View) {
-
     }
 
     fun onChangeImage(view: View) {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         galleryResult.launch(intent)
-
     }
 }

@@ -20,7 +20,7 @@ import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.util.*
+import java.util.UUID
 
 class AddItemActivity : AppCompatActivity() {
     private lateinit var storage: FirebaseStorage
@@ -79,10 +79,10 @@ class AddItemActivity : AppCompatActivity() {
         val ref = storage.getReference("/images/$fname")
         val seller = FirebaseAuth.getInstance().currentUser
 
-        if(galleryImgUri == null){
+        if (galleryImgUri == null) {
             Log.w(TAG, "CreateUser fail")
             Toast.makeText(this, "Select image", Toast.LENGTH_SHORT).show()
-             return
+            return
         }
         val putFile = ref.putFile(galleryImgUri!!)
         putFile.addOnSuccessListener {

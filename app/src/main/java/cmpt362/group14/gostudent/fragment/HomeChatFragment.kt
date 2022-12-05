@@ -121,7 +121,7 @@ class HomeChatFragment : Fragment() {
                 Log.w(TAG, "Error getting documents: ", exception)
             }
     }
-    //TODO create options menu in new Activity
+    // TODO create options menu in new Activity
     /*
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.message_menu, menu)
