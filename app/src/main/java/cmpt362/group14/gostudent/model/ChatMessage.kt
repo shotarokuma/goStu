@@ -9,5 +9,8 @@ data class ChatMessage(
     val text: String = "",
     val fromId: String = "",
     val toId: String = "",
+    val initiateCall: Boolean = false,
+    val call: Boolean = false,
+    val callResponse: Boolean = false,
     val createdTime: Date = Date()
 )

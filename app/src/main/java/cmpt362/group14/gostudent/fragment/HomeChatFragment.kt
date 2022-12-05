@@ -87,7 +87,7 @@ class HomeChatFragment : Fragment() {
     private fun listenLatestMessages() {
         val toId: String? = FirebaseAuth.getInstance().uid
         db.collection("latest-message")
-            .whereEqualTo("toId", toId)
+            .whereEqualTo("toId", uid)
             .orderBy("createdTime")
             .addSnapshotListener { value, error ->
                 if (error != null) {

@@ -1,11 +1,11 @@
 package cmpt362.group14.gostudent.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import cmpt362.group14.gostudent.R
@@ -29,6 +29,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var user: User
     private lateinit var toUser: User
     private lateinit var currentUser: User
+    var callUser: User? = null
     private var toId: String? = null
     private var fromId: String? = null
     private val adapter = GroupAdapter<ViewHolder>()
@@ -70,6 +71,7 @@ class ChatActivity : AppCompatActivity() {
                 currentUser = it.documents[0].toObject(User::class.java)!!
                 Log.d(TAG, "Current user ${currentUser?.name}")
                 listenForMessages()
+
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents: ", exception)
@@ -93,11 +95,14 @@ class ChatActivity : AppCompatActivity() {
                         DocumentChange.Type.ADDED -> {
                             val chatMessage: ChatMessage =
                                 dc.document.toObject(ChatMessage::class.java)
-                            Log.d(TAG, "listenForMessages: ${chatMessage.text}")
-                            if (chatMessage.fromId == FirebaseAuth.getInstance().uid && chatMessage.toId == toUser.uid) {
-                                adapter.add(ChatFromItem(chatMessage.text, currentUser!!))
-                            } else if (chatMessage.toId == FirebaseAuth.getInstance().uid) {
-                                adapter.add(ChatToItem(chatMessage.text, toUser))
+                            if(chatMessage.call == false)
+                            {
+                                Log.d(TAG, "listenForMessages: ${chatMessage.text}")
+                                if (chatMessage.fromId == FirebaseAuth.getInstance().uid && chatMessage.toId == toUser.uid) {
+                                    adapter.add(ChatFromItem(chatMessage.text, currentUser!!))
+                                } else if (chatMessage.toId == FirebaseAuth.getInstance().uid) {
+                                    adapter.add(ChatToItem(chatMessage.text, toUser))
+                                }
                             }
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
@@ -126,8 +131,7 @@ class ChatActivity : AppCompatActivity() {
         db.collection("latest-message")
             .document()
             .set(chatMessage)
-        // adapter.clear()
-        // listenForMessages()
+
     }
 
     class ChatFromItem(val text: String, val user: User) : Item<ViewHolder>() {
@@ -157,4 +161,110 @@ class ChatActivity : AppCompatActivity() {
             Picasso.get().load(user.profileImageUrl).into(targetImageView)
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.call, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_video_call -> {
+            /*
+            Need to add the functionality to video call
+             */
+
+            val intent = Intent(this, OutgoingInvitationActivity::class.java)
+//            val userItem = item as UserItem
+            intent.putExtra("user", Gson().toJson(toUser))
+            println("outgoing user: -------    ${toUser.name}")
+            intent.putExtra("type","video")
+            startActivity(intent)
+            performSendCallMessage()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
+
+    private fun performSendCallMessage() {
+//        val chat = editTextChat.text.toString()
+        fromId = FirebaseAuth.getInstance().uid
+        val toUserData: String? = intent.getStringExtra(NewMessageActivity.USER_KEY)
+        user = Gson().fromJson(toUserData!!, User::class.java)
+        toId = user.uid
+        val chatMessage: ChatMessage = ChatMessage(text = "", fromId = fromId!!, toId = toId!!, initiateCall = true, call = true, callResponse = false)
+        db.collection("user-message")
+            .document()
+            .set(chatMessage)
+            .addOnSuccessListener {
+//                editTextChat.text.clear()
+//                recyclerView.scrollToPosition(adapter.itemCount - 1)
+            }
+
+        db.collection("latest-message")
+            .document()
+            .set(chatMessage)
+        // adapter.clear()
+        listenForCallMessages()
+    }
+
+    private fun listenForCallMessages() {
+        fromId = FirebaseAuth.getInstance().uid
+        toId = toUser.uid
+        db.collection("user-message")
+            .whereIn("fromId", listOf(fromId, toId))
+            .orderBy("createdTime")
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.w(TAG, "Listen failed.", error)
+                    return@addSnapshotListener
+                }
+
+                for (dc in value!!.documentChanges) {
+                    when (dc.type) {
+                        DocumentChange.Type.ADDED -> {
+                            val chatMessage: ChatMessage =
+                                dc.document.toObject(ChatMessage::class.java)
+//                            Log.d(TAG, "listenForMessages: ${chatMessage.text}")
+                            if (chatMessage.initiateCall == false)
+                            {
+                                if(chatMessage.call == true && chatMessage.callResponse == true)
+                                {
+                                    Toast.makeText(this, "ACCEPTED", Toast.LENGTH_SHORT).show()
+                                }
+                                else if(chatMessage.call == true && chatMessage.callResponse == false)
+                                {
+                                    Toast.makeText(this, "REJECTED", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                            }
+                            else
+                            {
+                                if (chatMessage.fromId == FirebaseAuth.getInstance().uid && chatMessage.toId == toUser.uid)
+                                {
+
+                                }
+                                else if (chatMessage.toId == FirebaseAuth.getInstance().uid) {
+                                    val intent = Intent(this, IncomingInvitationActivity::class.java)
+                                    db.collection("user")
+                                        .whereEqualTo("uid", toId)
+                                        .get()
+                                        .addOnSuccessListener {
+                                            callUser = it.documents[0].toObject(User::class.java)
+                                            println("$---caller--------${callUser?.name}---------------")
+                                        }
+                                    intent.putExtra("user", Gson().toJson(callUser))
+                                    intent.putExtra("type","video")
+                                    startActivity(intent)
+
+                                }
+                            }
+
+                        }
+                        DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
+                        DocumentChange.Type.REMOVED -> TODO("Not yet implemented")
+                    }
+                }
+            }
+    }
+
 }
