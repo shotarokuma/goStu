@@ -26,6 +26,7 @@ class MarketplaceFragment : Fragment() {
     private var _binding: ActivityMarketplaceBinding? = null
     private val binding get() = _binding!!
     private var itemList = ArrayList<Item>()
+    private var fetched = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +46,7 @@ class MarketplaceFragment : Fragment() {
             startActivity(intent)
         }
         db = FirebaseFirestore.getInstance()
+        itemList = ArrayList()
         fetchItems()
         return root
     }
@@ -67,7 +69,10 @@ class MarketplaceFragment : Fragment() {
                                 MarketplaceAdapter(requireActivity(), itemList)
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
-                        DocumentChange.Type.REMOVED -> TODO("Not yet implemented")
+                        DocumentChange.Type.REMOVED ->{
+                            val item: Item = dc.document.toObject(Item::class.java)
+                            itemList.remove(item)
+                        }
                     }
                 }
             }
