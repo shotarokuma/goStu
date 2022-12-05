@@ -10,6 +10,7 @@
     <string name="log_in_text_view">Already Have an account? Press here to log in.</string>
     <string name="login">login</string>
     <string name="go_back">Press here to go back</string>
+    <string name="new_message">New message</string>
 
     <string name="selected_item">Select condition:</string>
     <string-array name="conditions">
