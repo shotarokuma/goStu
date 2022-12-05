@@ -88,20 +88,20 @@ class ProfileSettingsFragment : Fragment() {
         val fname = UUID.randomUUID().toString()
         val ref = storage.getReference("/images/$fname")
         if (galleryImgUri == null) {
-                val newUser = User(
-                    id = user.id,
-                    uid = user.uid,
-                    name = newName,
-                    password = newPassword,
-                    mail = newEmail,
-                    profileImageUrl = user.profileImageUrl
-                )
-                db.collection("user")
-                    .document(user.id)
-                    .set(newUser)
-                    .addOnSuccessListener {
-                        Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
-                    }
+            val newUser = User(
+                id = user.id,
+                uid = user.uid,
+                name = newName,
+                password = newPassword,
+                mail = newEmail,
+                profileImageUrl = user.profileImageUrl
+            )
+            db.collection("user")
+                .document(user.id)
+                .set(newUser)
+                .addOnSuccessListener {
+                    Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
+                }
         } else {
             val putFile = ref.putFile(galleryImgUri!!)
             putFile.addOnSuccessListener {

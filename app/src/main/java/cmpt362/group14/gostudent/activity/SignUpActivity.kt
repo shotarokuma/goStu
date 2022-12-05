@@ -109,7 +109,7 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
     }
-    private fun storeAccount(uid: String, name: String, email: String, password: String){
+    private fun storeAccount(uid: String, name: String, email: String, password: String) {
         // store image in firebase storage
         val fname = UUID.randomUUID().toString()
         val ref = storage.getReference("/images/$fname")
@@ -120,7 +120,7 @@ class SignUpActivity : AppCompatActivity() {
             // download url, then make new user
             ref.downloadUrl.addOnSuccessListener {
                 newUser = User(
-                    uid=uid,
+                    uid = uid,
                     name = name,
                     mail = email,
                     password = password,
