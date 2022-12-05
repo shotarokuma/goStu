@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 
 class EditItemActivity : AppCompatActivity() {
+    private val TAG: String = "EditItem TAG"
     private var galleryImgUri: Uri? = null
     private lateinit var galleryResult: ActivityResultLauncher<Intent>
     private lateinit var db: FirebaseFirestore
@@ -107,16 +109,26 @@ class EditItemActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+    override fun onOptionsItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
         R.id.action_delete -> {
             /*
             Need to add the functionality to delete the item
              */
+            db.collection("item")
+                .whereEqualTo("name", item.name)
+                .get()
+                .addOnSuccessListener {
+                    if(it.documents.isNotEmpty()) {
+                        it.documents.get(0).reference.delete().addOnSuccessListener {
+                            Log.d(TAG, "onOptionsItemSelected: Deleted item")
+                        }
+                    }
+                }
             finish()
             System.out.close()
             true
         }
-        else -> super.onOptionsItemSelected(item)
+        else -> super.onOptionsItemSelected(menuItem)
     }
 
     fun onStoreItem(view: View) {
