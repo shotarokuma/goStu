@@ -16,6 +16,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import cmpt362.group14.gostudent.R
+import cmpt362.group14.gostudent.activity.LoginActivity
+import cmpt362.group14.gostudent.activity.SignUpActivity
 import cmpt362.group14.gostudent.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,7 +35,6 @@ class ProfileSettingsFragment : Fragment() {
     private lateinit var galleryResult: ActivityResultLauncher<Intent>
     private lateinit var emailEditText: EditText
     private lateinit var userNameEditText: EditText
-    private lateinit var passwordEditText: EditText
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
     private lateinit var profileImageButton: ImageButton
@@ -48,7 +49,6 @@ class ProfileSettingsFragment : Fragment() {
 
         userNameEditText = view.findViewById(R.id.editTextUserName)
         emailEditText = view.findViewById(R.id.editTextEmailAddress)
-        passwordEditText = view.findViewById(R.id.editTextPassword)
         saveButton = view.findViewById(R.id.save_changes)
         cancelButton = view.findViewById(R.id.cancel_changes)
         profileImageButton = view.findViewById(R.id.profileImageButton)
@@ -78,21 +78,20 @@ class ProfileSettingsFragment : Fragment() {
         saveButton.setOnClickListener {
             val name: String = userNameEditText.text.toString()
             val email: String = emailEditText.text.toString()
-            val password: String = passwordEditText.text.toString()
-            updateUser(name, email, password)
+            updateUser(name, email)
         }
         return view
     }
 
-    private fun updateUser(newName: String, newEmail: String, newPassword: String) {
-        auth.currentUser?.updatePassword(newPassword)
+    private fun updateUser(newName: String, newEmail: String) {
         auth.currentUser?.updateEmail(newEmail)
+
         if (galleryImgUri == null) {
             val newUser = User(
                 id = user.id,
                 uid = user.uid,
                 name = newName,
-                password = newPassword,
+                password = user.password,
                 mail = newEmail,
                 profileImageUrl = user.profileImageUrl
             )
@@ -101,6 +100,10 @@ class ProfileSettingsFragment : Fragment() {
                 .set(newUser)
                 .addOnSuccessListener {
                     Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
+                    auth.signOut()
+                    val intent:Intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
                 }
         } else {
             val fname = UUID.randomUUID().toString()
@@ -112,7 +115,7 @@ class ProfileSettingsFragment : Fragment() {
                         id = user.id,
                         uid = user.uid,
                         name = newName,
-                        password = newPassword,
+                        password = user.password,
                         mail = newEmail,
                         profileImageUrl = it.toString()
                     )
@@ -121,6 +124,10 @@ class ProfileSettingsFragment : Fragment() {
                         .set(newUser)
                         .addOnSuccessListener {
                             Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
+                            auth.signOut()
+                            val intent:Intent = Intent(context, LoginActivity::class.java)
+                            startActivity(intent)
+                            activity?.finish()
                         }
                 }
             }
@@ -138,7 +145,6 @@ class ProfileSettingsFragment : Fragment() {
                 user = it.documents[0].toObject(User::class.java)!!
                 userNameEditText.setText(user.name)
                 emailEditText.setText(user.mail)
-                passwordEditText.setText(user.password)
                 Picasso.get().load(user.profileImageUrl).into(profileImageButton)
             }
             .addOnFailureListener { exception ->
