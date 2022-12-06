@@ -85,8 +85,8 @@ class ProfileSettingsFragment : Fragment() {
     }
 
     private fun updateUser(newName: String, newEmail: String, newPassword: String) {
-        val fname = UUID.randomUUID().toString()
-        val ref = storage.getReference("/images/$fname")
+        auth.currentUser?.updatePassword(newPassword)
+        auth.currentUser?.updateEmail(newEmail)
         if (galleryImgUri == null) {
             val newUser = User(
                 id = user.id,
@@ -103,6 +103,8 @@ class ProfileSettingsFragment : Fragment() {
                     Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
                 }
         } else {
+            val fname = UUID.randomUUID().toString()
+            val ref = storage.getReference("/images/$fname")
             val putFile = ref.putFile(galleryImgUri!!)
             putFile.addOnSuccessListener {
                 ref.downloadUrl.addOnSuccessListener {
