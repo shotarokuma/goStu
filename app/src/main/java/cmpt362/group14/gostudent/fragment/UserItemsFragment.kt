@@ -54,7 +54,7 @@ class UserItemsFragment : Fragment() {
                                 ItemAdapter(requireActivity(), itemList)
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
-                        DocumentChange.Type.REMOVED ->{
+                        DocumentChange.Type.REMOVED -> {
                             val item: Item = dc.document.toObject(Item::class.java)
                             itemList.remove(item)
                         }
