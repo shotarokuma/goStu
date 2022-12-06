@@ -12,9 +12,11 @@ import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class UserItemsFragment : Fragment() {
 
+    private lateinit var listener: ListenerRegistration
     private lateinit var db: FirebaseFirestore
     private var binding: ActivityUserItemsBinding? = null
     private var itemList = ArrayList<Item>()
@@ -36,7 +38,7 @@ class UserItemsFragment : Fragment() {
     }
 
     private fun fetchItems() {
-        db.collection("item")
+        listener = db.collection("item")
             .whereEqualTo("sellerId", uid)
             .addSnapshotListener { value, error ->
                 if (error != null) {
@@ -80,5 +82,6 @@ class UserItemsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        listener.remove()
     }
 }

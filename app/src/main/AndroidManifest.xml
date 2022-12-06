@@ -25,12 +25,6 @@
             android:name=".activity.EditItemActivity"
             android:exported="false" />
         <activity
-            android:name=".fragment.UserItemsFragment"
-            android:exported="false" />
-        <activity
-            android:name=".fragment.ProfileSettingsFragment"
-            android:exported="false" />
-        <activity
             android:name=".activity.AddItemActivity"
             android:exported="false" />
         <activity

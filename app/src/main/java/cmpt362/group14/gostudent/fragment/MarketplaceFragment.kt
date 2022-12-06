@@ -75,7 +75,9 @@ class MarketplaceFragment : Fragment() {
                                     MarketplaceAdapter(requireActivity(), itemList)
                             }
                         }
-                        DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
+                        DocumentChange.Type.MODIFIED -> {
+                            Log.d("Marketplace TAG", "fetchItems: item changed")
+                        }
                         DocumentChange.Type.REMOVED -> {
                             val item: Item = dc.document.toObject(Item::class.java)
                             itemList.remove(item)

@@ -96,7 +96,7 @@ class ProfileSettingsFragment : Fragment() {
                 id = user.id,
                 uid = user.uid,
                 name = newName,
-                fcm= token,
+                fcm = token,
                 password = user.password,
                 mail = newEmail,
                 profileImageUrl = user.profileImageUrl
@@ -158,7 +158,6 @@ class ProfileSettingsFragment : Fragment() {
             }
     }
 
-
     private fun getToken() {
         notification.token.addOnCompleteListener(
             OnCompleteListener { task ->
@@ -169,5 +168,4 @@ class ProfileSettingsFragment : Fragment() {
             }
         )
     }
-
 }
