@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".fragment.HomeChatFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/latest_message_recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:padding="5dp"
+        android:layout_margin="20dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

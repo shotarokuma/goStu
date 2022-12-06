@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".activity.ChatActivity">
 
     <EditText
@@ -27,15 +28,17 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Send"
+        android:backgroundTint="#10ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_chat"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:background="@android:color/holo_blue_light"
+        android:background="@drawable/pink_back"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:padding="10dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/edittext_chat"
         app:layout_constraintEnd_toEndOf="parent"
