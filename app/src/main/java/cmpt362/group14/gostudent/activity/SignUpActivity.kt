@@ -15,9 +15,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.model.User
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
@@ -35,6 +37,8 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var newUser: User
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
+    private lateinit var notification: FirebaseMessaging
+    private lateinit var token: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +53,7 @@ class SignUpActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
+        notification = FirebaseMessaging.getInstance()
 
         galleryResult = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -113,8 +118,8 @@ class SignUpActivity : AppCompatActivity() {
         // store image in firebase storage
         val fname = UUID.randomUUID().toString()
         val ref = storage.getReference("/images/$fname")
-
         val putFile = ref.putFile(galleryImgUri!!)
+        getToken()
         putFile.addOnSuccessListener {
             Log.d(TAG, "storeImage: success")
             // download url, then make new user
@@ -123,6 +128,7 @@ class SignUpActivity : AppCompatActivity() {
                     uid = uid,
                     name = name,
                     mail = email,
+                    fcm = token,
                     password = password,
                     profileImageUrl = it.toString()
                 )
@@ -139,6 +145,18 @@ class SignUpActivity : AppCompatActivity() {
         putFile.addOnFailureListener {
             Toast.makeText(this, "Store Image Failed", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun getToken() {
+        notification.token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+                token = task.result
+            }
+        )
     }
 
     private fun updateUI(user: FirebaseUser?) {

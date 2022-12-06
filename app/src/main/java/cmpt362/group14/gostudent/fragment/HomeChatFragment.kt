@@ -22,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
-import java.util.*
 import kotlin.collections.HashMap
 
 class HomeChatFragment : Fragment() {
