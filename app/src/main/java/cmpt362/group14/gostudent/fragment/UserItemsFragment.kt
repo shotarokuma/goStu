@@ -37,7 +37,6 @@ class UserItemsFragment : Fragment() {
 
     private fun fetchItems() {
         db.collection("item")
-            .orderBy("createdTime")
             .whereEqualTo("sellerId", uid)
             .addSnapshotListener { value, error ->
                 if (error != null) {
@@ -54,10 +53,7 @@ class UserItemsFragment : Fragment() {
                                 ItemAdapter(requireActivity(), itemList)
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
-                        DocumentChange.Type.REMOVED ->{
-                            val item: Item = dc.document.toObject(Item::class.java)
-                            itemList.remove(item)
-                        }
+                        DocumentChange.Type.REMOVED -> TODO("Not yet implemented")
                     }
                 }
             }

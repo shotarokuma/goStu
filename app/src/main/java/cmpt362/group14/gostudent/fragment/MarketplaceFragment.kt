@@ -69,15 +69,14 @@ class MarketplaceFragment : Fragment() {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
                             val item: Item = dc.document.toObject(Item::class.java)
-                            if(item.sellerId != uid)
-                            {
+                            if (item.sellerId != uid) {
                                 itemList.add(item)
                                 binding.listviewItems.adapter =
                                     MarketplaceAdapter(requireActivity(), itemList)
                             }
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
-                        DocumentChange.Type.REMOVED ->{
+                        DocumentChange.Type.REMOVED -> {
                             val item: Item = dc.document.toObject(Item::class.java)
                             itemList.remove(item)
                         }
