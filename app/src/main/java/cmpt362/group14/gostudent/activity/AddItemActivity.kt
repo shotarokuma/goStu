@@ -15,7 +15,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import cmpt362.group14.gostudent.R
-import cmpt362.group14.gostudent.activity.HomeChatActivity.Companion.TAG
+import cmpt362.group14.gostudent.fragment.HomeChatFragment.Companion.TAG
 import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

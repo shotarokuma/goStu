@@ -26,7 +26,8 @@ import com.xwray.groupie.ViewHolder
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
+import java.util.Locale
+import java.util.Objects
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
@@ -44,7 +45,6 @@ class ChatActivity : AppCompatActivity() {
     private val adapter = GroupAdapter<ViewHolder>()
     private lateinit var micIV: ImageView
     private val REQUEST_CODE_SPEECH_INPUT = 1
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +78,8 @@ class ChatActivity : AppCompatActivity() {
 
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE,
-                Locale.getDefault())
+                Locale.getDefault()
+            )
 
             intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text")
 
@@ -124,7 +125,6 @@ class ChatActivity : AppCompatActivity() {
             }
         }
     }
-
 
     /**
      * Sets currentUser, then launches listenForMessages()
@@ -177,6 +177,10 @@ class ChatActivity : AppCompatActivity() {
 
     private fun performSendMessage() {
         val chat = editTextChat.text.toString()
+        if (chat.isEmpty()) {
+            Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         fromId = FirebaseAuth.getInstance().uid
         val toUserData: String? = intent.getStringExtra(NewMessageActivity.USER_KEY)
@@ -211,6 +215,7 @@ class ChatActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener {
                 val token = it.documents[0].toObject(User::class.java)!!.fcm
+                println(it.documents[0].toObject(User::class.java))
                 thread {
                     try {
                         service.sendMessage(

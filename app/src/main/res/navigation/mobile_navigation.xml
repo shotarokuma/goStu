@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_market">
+
+    <fragment
+        android:id="@+id/nav_market"
+        android:name="cmpt362.group14.gostudent.fragment.MarketplaceFragment"
+        android:label="Market"
+        tools:layout="@layout/activity_marketplace" />
+
+    <fragment
+        android:id="@+id/nav_chat"
+        android:name="cmpt362.group14.gostudent.fragment.HomeChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/activity_home_chat" />
+    <fragment
+        android:id="@+id/nav_user_items"
+        android:name="cmpt362.group14.gostudent.fragment.UserItemsFragment"
+        android:label="Edit Items"
+        tools:layout="@layout/activity_user_items" />
+    <fragment
+        android:id="@+id/nav_edit_profile"
+        android:name="cmpt362.group14.gostudent.fragment.ProfileSettingsFragment"
+        android:label="Profile"
+        tools:layout="@layout/activity_profile_settings" />
+
+</navigation>

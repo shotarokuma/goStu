@@ -17,7 +17,12 @@
         android:theme="@style/Theme.GoStudent"
         tools:targetApi="31">
         <activity
-            android:name=".activity.MarketplaceActivity"
+            android:name=".activity.NavbarActivity"
+            android:exported="false"
+            android:label="@string/title_activity_navbar"
+            android:theme="@style/Theme.GoStudent.NoActionBar" />
+        <activity
+            android:name=".activity.EditItemActivity"
             android:exported="false" />
         <activity
             android:name=".activity.AddItemActivity"
@@ -40,11 +45,8 @@
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeChatActivity" />
+                android:value=".fragment.HomeChatFragment" />
         </activity>
-        <activity
-            android:name=".activity.HomeChatActivity"
-            android:exported="false" />
         <activity
             android:name=".activity.SignUpActivity"
             android:exported="true">
