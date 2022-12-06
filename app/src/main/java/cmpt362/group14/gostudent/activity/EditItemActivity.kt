@@ -156,7 +156,7 @@ class EditItemActivity : AppCompatActivity() {
                 .document(item.iid)
                 .set(newItem)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "After a while, your item is going to be updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Your item is updated", Toast.LENGTH_SHORT).show()
                     finish()
                 }
         } else {
@@ -179,7 +179,7 @@ class EditItemActivity : AppCompatActivity() {
                         .document(item.iid)
                         .set(newItem)
                         .addOnSuccessListener {
-                            Toast.makeText(this, "After a while, your item is going to be updated", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Your item is updated", Toast.LENGTH_SHORT).show()
                             finish()
                         }
                 }
