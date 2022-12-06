@@ -49,7 +49,7 @@ class UserItemsFragment : Fragment() {
                         DocumentChange.Type.ADDED -> {
                             val item: Item = dc.document.toObject(Item::class.java)
                             itemList.add(item)
-                            if(binding != null){
+                            if (binding != null) {
                                 binding!!.listviewItems.adapter =
                                     ItemAdapter(requireActivity(), itemList)
                             }
@@ -59,7 +59,7 @@ class UserItemsFragment : Fragment() {
                                 val newItem: Item = dc.document.toObject(Item::class.java)
                                 itemList.remove(itemList.find { item: Item -> item.iid == newItem.iid })
                                 itemList.add(newItem)
-                                if(binding != null){
+                                if (binding != null) {
                                     binding!!.listviewItems.adapter =
                                         ItemAdapter(requireActivity(), itemList)
                                 }
@@ -67,7 +67,7 @@ class UserItemsFragment : Fragment() {
                         DocumentChange.Type.REMOVED -> {
                             val item: Item = dc.document.toObject(Item::class.java)
                             itemList.remove(item)
-                            if(binding != null){
+                            if (binding != null) {
                                 binding!!.listviewItems.adapter =
                                     ItemAdapter(requireActivity(), itemList)
                             }

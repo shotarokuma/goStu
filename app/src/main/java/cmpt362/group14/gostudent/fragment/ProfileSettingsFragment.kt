@@ -18,8 +18,10 @@ import androidx.fragment.app.Fragment
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.activity.LoginActivity
 import cmpt362.group14.gostudent.model.User
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.util.UUID
@@ -38,6 +40,8 @@ class ProfileSettingsFragment : Fragment() {
     private lateinit var cancelButton: Button
     private lateinit var profileImageButton: ImageButton
     private var galleryImgUri: Uri? = null
+    private lateinit var notification: FirebaseMessaging
+    private lateinit var token: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +60,9 @@ class ProfileSettingsFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
         uid = auth.currentUser?.uid.toString()
         storage = FirebaseStorage.getInstance()
+        notification = FirebaseMessaging.getInstance()
+
+        getToken()
 
         fetchUserData()
 
@@ -84,12 +91,12 @@ class ProfileSettingsFragment : Fragment() {
 
     private fun updateUser(newName: String, newEmail: String) {
         auth.currentUser?.updateEmail(newEmail)
-
         if (galleryImgUri == null) {
             val newUser = User(
                 id = user.id,
                 uid = user.uid,
                 name = newName,
+                fcm= token,
                 password = user.password,
                 mail = newEmail,
                 profileImageUrl = user.profileImageUrl
@@ -150,4 +157,17 @@ class ProfileSettingsFragment : Fragment() {
                 Log.w(HomeChatFragment.TAG, "Error getting documents: ", exception)
             }
     }
+
+
+    private fun getToken() {
+        notification.token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@OnCompleteListener
+                }
+                token = task.result
+            }
+        )
+    }
+
 }

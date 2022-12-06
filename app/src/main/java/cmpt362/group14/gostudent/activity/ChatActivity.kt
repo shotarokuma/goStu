@@ -215,6 +215,7 @@ class ChatActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener {
                 val token = it.documents[0].toObject(User::class.java)!!.fcm
+                println(it.documents[0].toObject(User::class.java))
                 thread {
                     try {
                         service.sendMessage(
