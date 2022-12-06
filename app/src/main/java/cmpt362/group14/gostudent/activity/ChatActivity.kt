@@ -2,10 +2,7 @@ package cmpt362.group14.gostudent.activity
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import cmpt362.group14.gostudent.R
@@ -109,6 +106,11 @@ class ChatActivity : AppCompatActivity() {
 
     private fun performSendMessage() {
         val chat = editTextChat.text.toString()
+        if(chat.isEmpty())
+        {
+            Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         fromId = FirebaseAuth.getInstance().uid
         val toUserData: String? = intent.getStringExtra(NewMessageActivity.USER_KEY)
