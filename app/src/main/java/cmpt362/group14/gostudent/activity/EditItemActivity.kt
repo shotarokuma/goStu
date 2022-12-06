@@ -156,7 +156,8 @@ class EditItemActivity : AppCompatActivity() {
                 .document(item.iid)
                 .set(newItem)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "Update the item Successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "After a while, your item is going to be updated", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
         } else {
             val fname = UUID.randomUUID().toString()
@@ -178,7 +179,7 @@ class EditItemActivity : AppCompatActivity() {
                         .document(item.iid)
                         .set(newItem)
                         .addOnSuccessListener {
-                            Toast.makeText(this, "Sell your ${nameEditText.text} Successful", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "After a while, your item is going to be updated", Toast.LENGTH_SHORT).show()
                             finish()
                         }
                 }
