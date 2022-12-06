@@ -22,13 +22,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
+import java.util.*
+import kotlin.collections.HashMap
 
 class HomeChatFragment : Fragment() {
     private lateinit var db: FirebaseFirestore
     private lateinit var uid: String
     private lateinit var latestView: RecyclerView
     private var adapter = GroupAdapter<ViewHolder>()
-    private var latestMessagesList = ArrayList<ChatMessage>()
+    private var latestMessagesList = HashMap<String,ChatMessage>()
 
     companion object {
         var currentUser: User? = null
@@ -79,8 +81,9 @@ class HomeChatFragment : Fragment() {
 
     private fun refreshRecyclerViewMessages() {
         adapter.clear()
-        latestMessagesList.forEach {
-            adapter.add(LatestMessagesRow(it))
+        val result = latestMessagesList.toList().sortedBy { (_, value) -> value.createdTime}.asReversed().toMap()
+        result.forEach {
+            adapter.add(LatestMessagesRow(it.value))
         }
     }
 
@@ -100,7 +103,20 @@ class HomeChatFragment : Fragment() {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
                             Log.d(TAG, "listenLatestMessages: ${chatMessage.text}")
-                            latestMessagesList.add(0, chatMessage)
+                            if(latestMessagesList.containsKey(chatMessage.fromId))
+                            {
+                                var time = latestMessagesList.get(chatMessage.fromId)?.createdTime?.time
+                                if (time != null) {
+                                    if ((time - chatMessage.createdTime.time) < 0 ) {
+                                        latestMessagesList.put(chatMessage.fromId,chatMessage)
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                latestMessagesList.put(chatMessage.fromId,chatMessage)
+                            }
+//                            latestMessagesList.add(0, chatMessage)
                             refreshRecyclerViewMessages()
                         }
                         DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
