@@ -17,7 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.activity.LoginActivity
-import cmpt362.group14.gostudent.activity.SignUpActivity
 import cmpt362.group14.gostudent.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -101,7 +100,7 @@ class ProfileSettingsFragment : Fragment() {
                 .addOnSuccessListener {
                     Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
                     auth.signOut()
-                    val intent:Intent = Intent(context, LoginActivity::class.java)
+                    val intent: Intent = Intent(context, LoginActivity::class.java)
                     startActivity(intent)
                     activity?.finish()
                 }
@@ -125,7 +124,7 @@ class ProfileSettingsFragment : Fragment() {
                         .addOnSuccessListener {
                             Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
                             auth.signOut()
-                            val intent:Intent = Intent(context, LoginActivity::class.java)
+                            val intent: Intent = Intent(context, LoginActivity::class.java)
                             startActivity(intent)
                             activity?.finish()
                         }
