@@ -41,6 +41,13 @@
                 android:value=".activity.NewMessageActivity" />
         </activity>
         <activity
+            android:name=".activity.AddItemActivity"
+            android:exported="false"
+            />
+        <activity
+            android:name=".activity.ItemActivity"
+            android:exported="false"/>
+        <activity
             android:name=".activity.NewMessageActivity"
             android:exported="false">
             <meta-data
