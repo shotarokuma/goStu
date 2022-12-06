@@ -1,6 +1,8 @@
 package cmpt362.group14.gostudent.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -24,6 +26,8 @@ import com.xwray.groupie.ViewHolder
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
 class ChatActivity : AppCompatActivity() {
@@ -38,6 +42,9 @@ class ChatActivity : AppCompatActivity() {
     private var toId: String? = null
     private var fromId: String? = null
     private val adapter = GroupAdapter<ViewHolder>()
+    private lateinit var micIV: ImageView
+    private val REQUEST_CODE_SPEECH_INPUT = 1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +61,39 @@ class ChatActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerview_chat)
         recyclerView.adapter = adapter
 
+        micIV = findViewById(R.id.idIVMic)
 //        listenForMessages()
         getCurrentUser()
+
+        micIV.setOnClickListener {
+            // on below line we are calling speech recognizer intent.
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+
+            // on below line we are passing language model
+            // and model free form in our intent
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE,
+                Locale.getDefault())
+
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text")
+
+            try {
+                startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT)
+            } catch (e: Exception) {
+                // on below line we are displaying error message in toast
+                Toast
+                    .makeText(
+                        this, " " + e.message,
+                        Toast.LENGTH_SHORT
+                    )
+                    .show()
+            }
+        }
 
         sendButton = findViewById(R.id.send_chat_button)
         editTextChat = findViewById(R.id.edittext_chat)
@@ -63,6 +101,30 @@ class ChatActivity : AppCompatActivity() {
             performSendMessage()
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // in this method we are checking request
+        // code with our result code.
+        if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+            // on below line we are checking if result code is ok
+            if (resultCode == RESULT_OK && data != null) {
+
+                // in that case we are extracting the
+                // data from our array list
+                val res: ArrayList<String> =
+                    data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) as ArrayList<String>
+
+                // on below line we are setting data
+                // to our output text view.
+                editTextChat.setText(
+                    Objects.requireNonNull(res)[0]
+                )
+            }
+        }
+    }
+
 
     /**
      * Sets currentUser, then launches listenForMessages()
