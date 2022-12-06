@@ -30,7 +30,7 @@ class HomeChatFragment : Fragment() {
     private lateinit var uid: String
     private lateinit var latestView: RecyclerView
     private var adapter = GroupAdapter<ViewHolder>()
-    private var latestMessagesList = HashMap<String,ChatMessage>()
+    private var latestMessagesList = HashMap<String, ChatMessage>()
 
     companion object {
         var currentUser: User? = null
@@ -81,7 +81,7 @@ class HomeChatFragment : Fragment() {
 
     private fun refreshRecyclerViewMessages() {
         adapter.clear()
-        val result = latestMessagesList.toList().sortedBy { (_, value) -> value.createdTime}.asReversed().toMap()
+        val result = latestMessagesList.toList().sortedBy { (_, value) -> value.createdTime }.asReversed().toMap()
         result.forEach {
             adapter.add(LatestMessagesRow(it.value))
         }
@@ -103,18 +103,15 @@ class HomeChatFragment : Fragment() {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
                             Log.d(TAG, "listenLatestMessages: ${chatMessage.text}")
-                            if(latestMessagesList.containsKey(chatMessage.fromId))
-                            {
+                            if (latestMessagesList.containsKey(chatMessage.fromId)) {
                                 var time = latestMessagesList.get(chatMessage.fromId)?.createdTime?.time
                                 if (time != null) {
-                                    if ((time - chatMessage.createdTime.time) < 0 ) {
-                                        latestMessagesList.put(chatMessage.fromId,chatMessage)
+                                    if ((time - chatMessage.createdTime.time) < 0) {
+                                        latestMessagesList.put(chatMessage.fromId, chatMessage)
                                     }
                                 }
-                            }
-                            else
-                            {
-                                latestMessagesList.put(chatMessage.fromId,chatMessage)
+                            } else {
+                                latestMessagesList.put(chatMessage.fromId, chatMessage)
                             }
 //                            latestMessagesList.add(0, chatMessage)
                             refreshRecyclerViewMessages()

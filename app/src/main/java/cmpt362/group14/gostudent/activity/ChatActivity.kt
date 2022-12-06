@@ -106,8 +106,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun performSendMessage() {
         val chat = editTextChat.text.toString()
-        if(chat.isEmpty())
-        {
+        if (chat.isEmpty()) {
             Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show()
             return
         }
