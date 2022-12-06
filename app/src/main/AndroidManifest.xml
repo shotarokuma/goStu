@@ -31,6 +31,12 @@
             android:name=".fragment.ProfileSettingsFragment"
             android:exported="false" />
         <activity
+            android:name=".activity.AddItemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ItemActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.LoginActivity"
             android:exported="false" />
         <activity
