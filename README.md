@@ -21,10 +21,10 @@ https://alphatech.technology/Blog-Entry-srk/Google-Services-Json-bek/
 - Shotaro Kumagai
 
 ## Download link
-[goStudent's apk](https://github.com/shotarokuma/goStudent/files/10173110/app-debug.apk.2.zip)
+[goStudent's apk](https://github.com/shotarokuma/goStudent/files/10173358/app-debug.apk.zip)
 
 
-## The original pitch.
+## The original pitch
 https://youtu.be/IEBa9X1uEmI
 
 ## The final pitch
