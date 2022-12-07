@@ -20,7 +20,7 @@ https://alphatech.technology/Blog-Entry-srk/Google-Services-Json-bek/
 - Yatik Mittal
 - Shotaro Kumagai
 
-## xDownload link
+## Download link
 [goStudent](https://github.com/shotarokuma/goStudent/files/10172151/app-debug.apk.zip)
 
 
