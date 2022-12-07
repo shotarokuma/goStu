@@ -21,7 +21,7 @@ https://alphatech.technology/Blog-Entry-srk/Google-Services-Json-bek/
 - Shotaro Kumagai
 
 ## Download link
-[goStudent's 2](https://github.com/shotarokuma/goStudent/files/10173110/app-debug.apk.2.zip)
+[goStudent's apk](https://github.com/shotarokuma/goStudent/files/10173110/app-debug.apk.2.zip)
 
 
 ## The original pitch.
