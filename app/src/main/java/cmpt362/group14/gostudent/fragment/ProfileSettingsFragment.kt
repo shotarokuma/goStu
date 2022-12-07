@@ -86,6 +86,10 @@ class ProfileSettingsFragment : Fragment() {
             val email: String = emailEditText.text.toString()
             updateUser(name, email)
         }
+
+        cancelButton.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
         return view
     }
 
