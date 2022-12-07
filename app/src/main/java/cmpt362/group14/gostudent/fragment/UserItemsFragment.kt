@@ -12,9 +12,11 @@ import cmpt362.group14.gostudent.model.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class UserItemsFragment : Fragment() {
 
+    private lateinit var listener: ListenerRegistration
     private lateinit var db: FirebaseFirestore
     private var binding: ActivityUserItemsBinding? = null
     private var itemList = ArrayList<Item>()
@@ -36,8 +38,7 @@ class UserItemsFragment : Fragment() {
     }
 
     private fun fetchItems() {
-        db.collection("item")
-            .orderBy("createdTime")
+        listener = db.collection("item")
             .whereEqualTo("sellerId", uid)
             .addSnapshotListener { value, error ->
                 if (error != null) {
@@ -50,11 +51,29 @@ class UserItemsFragment : Fragment() {
                         DocumentChange.Type.ADDED -> {
                             val item: Item = dc.document.toObject(Item::class.java)
                             itemList.add(item)
-                            binding!!.listviewItems.adapter =
-                                ItemAdapter(requireActivity(), itemList)
+                            if (binding != null) {
+                                binding!!.listviewItems.adapter =
+                                    ItemAdapter(requireActivity(), itemList)
+                            }
                         }
-                        DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
-                        DocumentChange.Type.REMOVED -> TODO("Not yet implemented")
+                        DocumentChange.Type.MODIFIED ->
+                            {
+                                val newItem: Item = dc.document.toObject(Item::class.java)
+                                itemList.remove(itemList.find { item: Item -> item.iid == newItem.iid })
+                                itemList.add(newItem)
+                                if (binding != null) {
+                                    binding!!.listviewItems.adapter =
+                                        ItemAdapter(requireActivity(), itemList)
+                                }
+                            }
+                        DocumentChange.Type.REMOVED -> {
+                            val item: Item = dc.document.toObject(Item::class.java)
+                            itemList.remove(item)
+                            if (binding != null) {
+                                binding!!.listviewItems.adapter =
+                                    ItemAdapter(requireActivity(), itemList)
+                            }
+                        }
                     }
                 }
             }
@@ -63,5 +82,6 @@ class UserItemsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        listener.remove()
     }
 }

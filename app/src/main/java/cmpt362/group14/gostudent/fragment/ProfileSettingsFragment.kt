@@ -1,5 +1,7 @@
 package cmpt362.group14.gostudent.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +12,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import cmpt362.group14.gostudent.R
+import cmpt362.group14.gostudent.activity.LoginActivity
 import cmpt362.group14.gostudent.model.User
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.util.UUID
@@ -22,18 +29,19 @@ import java.util.UUID
 class ProfileSettingsFragment : Fragment() {
 
     private lateinit var db: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
     private lateinit var uid: String
-    private var galleryImgUri: Uri? = null
     private lateinit var user: User
-    private lateinit var storage: FirebaseStorage
-    private val TAG = "ProfileUpdate"
+    private lateinit var galleryResult: ActivityResultLauncher<Intent>
     private lateinit var emailEditText: EditText
     private lateinit var userNameEditText: EditText
-    private lateinit var passwordEditText: EditText
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
     private lateinit var profileImageButton: ImageButton
+    private var galleryImgUri: Uri? = null
+    private lateinit var notification: FirebaseMessaging
+    private lateinit var token: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +52,6 @@ class ProfileSettingsFragment : Fragment() {
 
         userNameEditText = view.findViewById(R.id.editTextUserName)
         emailEditText = view.findViewById(R.id.editTextEmailAddress)
-        passwordEditText = view.findViewById(R.id.editTextPassword)
         saveButton = view.findViewById(R.id.save_changes)
         cancelButton = view.findViewById(R.id.cancel_changes)
         profileImageButton = view.findViewById(R.id.profileImageButton)
@@ -52,90 +59,113 @@ class ProfileSettingsFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         uid = auth.currentUser?.uid.toString()
+        storage = FirebaseStorage.getInstance()
+        notification = FirebaseMessaging.getInstance()
+
+        getToken()
 
         fetchUserData()
+
+        galleryResult = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                galleryImgUri = it.data?.data
+                profileImageButton.setImageURI(galleryImgUri)
+            }
+        }
+
+        profileImageButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            galleryResult.launch(intent)
+        }
 
         saveButton.setOnClickListener {
             val name: String = userNameEditText.text.toString()
             val email: String = emailEditText.text.toString()
-            val password: String = passwordEditText.text.toString()
-            updateAccount(name, email, password)
+            updateUser(name, email)
         }
         return view
     }
 
-    private fun updateAccount(name: String, email: String, password: String) {
-        if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                "Please enter an email or password",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
+    private fun updateUser(newName: String, newEmail: String) {
+        auth.currentUser?.updateEmail(newEmail)
         if (galleryImgUri == null) {
-            Toast.makeText(
-                requireContext(),
-                "Please enter a profile picture",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
+            val newUser = User(
+                id = user.id,
+                uid = user.uid,
+                name = newName,
+                fcm = token,
+                password = user.password,
+                mail = newEmail,
+                profileImageUrl = user.profileImageUrl
+            )
+            db.collection("user")
+                .document(user.id)
+                .set(newUser)
+                .addOnSuccessListener {
+                    Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
+                    auth.signOut()
+                    val intent: Intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
+                }
+        } else {
+            val fname = UUID.randomUUID().toString()
+            val ref = storage.getReference("/images/$fname")
+            val putFile = ref.putFile(galleryImgUri!!)
+            putFile.addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener {
+                    val newUser = User(
+                        id = user.id,
+                        uid = user.uid,
+                        name = newName,
+                        password = user.password,
+                        mail = newEmail,
+                        profileImageUrl = it.toString()
+                    )
+                    db.collection("user")
+                        .document(user.id)
+                        .set(newUser)
+                        .addOnSuccessListener {
+                            Toast.makeText(context, "Update Account Successful", Toast.LENGTH_SHORT).show()
+                            auth.signOut()
+                            val intent: Intent = Intent(context, LoginActivity::class.java)
+                            startActivity(intent)
+                            activity?.finish()
+                        }
+                }
+            }
+            putFile.addOnFailureListener {
+                Toast.makeText(context, "Store Image Failed", Toast.LENGTH_SHORT).show()
+            }
         }
-
-        storeAccount(user.uid, name, email, password)
     }
 
-    private fun storeAccount(uid: String, name: String, email: String, password: String) {
-        // store image in firebase storage
-        val fname = UUID.randomUUID().toString()
-        val ref = storage.getReference("/images/$fname")
-
-        val putFile = ref.putFile(galleryImgUri!!)
-        putFile.addOnSuccessListener {
-            Log.d(TAG, "storeImage: success")
-            // download url, then make new user
-//            ref.downloadUrl.addOnSuccessListener {
-//                newUser = User(
-//                    uid = uid,
-//                    name = name,
-//                    mail = email,
-//                    password = password,
-//                    profileImageUrl = it.toString()
-//                )
-//                db.collection("user")
-//                    .document()
-//                    .set(newUser)
-//                    .addOnSuccessListener {
-//                        Toast.makeText(requireContext(), "Create Account Successful", Toast.LENGTH_SHORT).show()
-//                        val user: FirebaseUser? = auth.currentUser
-//                        updateUI(user)
-//                    }
-//            }
-        }
-        putFile.addOnFailureListener {
-            Toast.makeText(requireContext(), "Store Image Failed", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun fetchUserData() {
+    private fun fetchUserData() {
         db.collection("user")
             .whereEqualTo("uid", uid)
             .get()
             .addOnSuccessListener {
                 user = it.documents[0].toObject(User::class.java)!!
-//                println("${user?.name}")
-                if (user != null) {
-                    userNameEditText.setText(user.name)
-                    emailEditText.setText(user.mail)
-                    passwordEditText.setText(user.password)
-                    /*
-                    Unable to display the stored image
-                     */
-                    Picasso.get().load(user.profileImageUrl).into(profileImageButton)
-                }
+                userNameEditText.setText(user.name)
+                emailEditText.setText(user.mail)
+                Picasso.get().load(user.profileImageUrl).into(profileImageButton)
             }
             .addOnFailureListener { exception ->
                 Log.w(HomeChatFragment.TAG, "Error getting documents: ", exception)
             }
+    }
+
+    private fun getToken() {
+        notification.token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@OnCompleteListener
+                }
+                token = task.result
+            }
+        )
     }
 }

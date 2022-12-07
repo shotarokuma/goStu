@@ -15,17 +15,22 @@ import cmpt362.group14.gostudent.R
 import cmpt362.group14.gostudent.activity.AddItemActivity
 import cmpt362.group14.gostudent.databinding.ActivityMarketplaceBinding
 import cmpt362.group14.gostudent.model.Item
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class MarketplaceFragment : Fragment() {
 
+    private lateinit var listenRegistration: ListenerRegistration
     private lateinit var db: FirebaseFirestore
     private lateinit var searchButton: Button
     private lateinit var searchBar: EditText
     private var _binding: ActivityMarketplaceBinding? = null
     private val binding get() = _binding!!
     private var itemList = ArrayList<Item>()
+    private lateinit var uid: String
+    private var fetched = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,12 +50,14 @@ class MarketplaceFragment : Fragment() {
             startActivity(intent)
         }
         db = FirebaseFirestore.getInstance()
+        uid = FirebaseAuth.getInstance().uid.toString()
+        itemList = ArrayList()
         fetchItems()
         return root
     }
 
     private fun fetchItems() {
-        db.collection("item")
+        listenRegistration = db.collection("item")
             .orderBy("createdTime")
             .addSnapshotListener { value, error ->
                 if (error != null) {
@@ -62,12 +69,19 @@ class MarketplaceFragment : Fragment() {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
                             val item: Item = dc.document.toObject(Item::class.java)
-                            itemList.add(item)
-                            binding.listviewItems.adapter =
-                                MarketplaceAdapter(requireActivity(), itemList)
+                            if (item.sellerId != uid) {
+                                itemList.add(item)
+                                binding.listviewItems.adapter =
+                                    MarketplaceAdapter(requireActivity(), itemList)
+                            }
                         }
-                        DocumentChange.Type.MODIFIED -> TODO("Not yet implemented")
-                        DocumentChange.Type.REMOVED -> TODO("Not yet implemented")
+                        DocumentChange.Type.MODIFIED -> {
+                            Log.d("Marketplace TAG", "fetchItems: item changed")
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            val item: Item = dc.document.toObject(Item::class.java)
+                            itemList.remove(item)
+                        }
                     }
                 }
             }
@@ -93,5 +107,6 @@ class MarketplaceFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        listenRegistration.remove()
     }
 }

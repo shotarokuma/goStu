@@ -4,6 +4,7 @@
     package="cmpt362.group14.gostudent">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -22,12 +23,6 @@
             android:theme="@style/Theme.GoStudent.NoActionBar" />
         <activity
             android:name=".activity.EditItemActivity"
-            android:exported="false" />
-        <activity
-            android:name=".fragment.UserItemsFragment"
-            android:exported="false" />
-        <activity
-            android:name=".fragment.ProfileSettingsFragment"
             android:exported="false" />
         <activity
             android:name=".activity.AddItemActivity"
@@ -61,6 +56,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.MessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

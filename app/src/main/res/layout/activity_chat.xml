@@ -21,6 +21,18 @@
         app:layout_constraintEnd_toStartOf="@+id/send_chat_button"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/idIVMic"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_outline_mic_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/send_chat_button"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/edittext_chat" />
+
     <Button
         android:id="@+id/send_chat_button"
         android:layout_width="wrap_content"
@@ -30,7 +42,9 @@
         android:text="Send"
         android:backgroundTint="#10ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/idIVMic" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_chat"
