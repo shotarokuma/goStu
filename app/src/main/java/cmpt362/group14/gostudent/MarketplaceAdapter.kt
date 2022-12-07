@@ -30,7 +30,11 @@ class MarketplaceAdapter(private val context: Activity, private val arrayList: A
         val item = arrayList[position]
         textViewItemName.text = item.name
         textViewPrice.text = item.price.toString()
-        Picasso.get().load(item.displayImageUrl).into(imageView)
+        Picasso.get()
+            .load(item.displayImageUrl)
+            .resize(300,300)
+            .centerCrop()
+            .into(imageView)
 
         view.setOnClickListener() {
             val intent = Intent(context, ItemActivity::class.java)
