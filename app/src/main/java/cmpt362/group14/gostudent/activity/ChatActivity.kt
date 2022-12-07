@@ -237,7 +237,7 @@ class ChatActivity : AppCompatActivity() {
             textView.text = text
 
             val targetImageView: ImageView = viewHolder.itemView.findViewById(R.id.imageView_from_row)
-            Picasso.get().load(user.profileImageUrl).into(targetImageView)
+            Picasso.get().load(user.profileImageUrl).resize(200,200).centerCrop().into(targetImageView)
         }
 
         override fun getLayout(): Int {
@@ -255,7 +255,7 @@ class ChatActivity : AppCompatActivity() {
             textView.text = text
 
             val targetImageView: ImageView = viewHolder.itemView.findViewById(R.id.imageView_to_row)
-            Picasso.get().load(user.profileImageUrl).into(targetImageView)
+            Picasso.get().load(user.profileImageUrl).resize(200,200).centerCrop().into(targetImageView)
         }
     }
 }
