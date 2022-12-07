@@ -88,7 +88,7 @@ class ProfileSettingsFragment : Fragment() {
         }
 
         cancelButton.setOnClickListener {
-            requireActivity().finish()
+            requireActivity().onBackPressed()
         }
         return view
     }
