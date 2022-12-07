@@ -99,7 +99,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:backgroundTint="#30ffffff"
-        tools:src="@drawable/ic_baseline_person_outline_24" />
+        tools:src="@drawable/blank_profile_picture_empty" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
