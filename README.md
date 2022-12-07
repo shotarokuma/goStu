@@ -14,13 +14,13 @@ touch app/google-services.json
 https://alphatech.technology/Blog-Entry-srk/Google-Services-Json-bek/
 
 
-#Team Members
-Jaspreet Singh
-Pieter Ruslim
-Yatik Mittal
-Shotaro Kumagai
+## Team Members
+- Jaspreet Singh
+- Pieter Ruslim
+- Yatik Mittal
+- Shotaro Kumagai
 
-#The original pitch.
+## The original pitch.
 https://youtu.be/IEBa9X1uEmI
 
-#The final pitch
+## The final pitch
